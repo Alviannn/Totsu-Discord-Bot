@@ -2,6 +2,40 @@ const Discord = require('discord.js');
 const Main = require('../index.js');
 const request = require('request');
 
+const imageByteProperty = {
+    bytes: 1,
+    fileType: 'png'
+}
+
+/**
+ * Converts baseg64 encoded data to image (in byte)
+ * 
+ * @param {String} data         the base64 encoded data (full length)
+ * @returns {imageByteProperty} the byted-image property
+ */
+function imageByter(data) {
+    // sample -> data:image/png;base64,<encoded data>
+
+    data = new String(data);
+    if (!data || !data.startsWith('data:image/') || !data.includes(';base64,')) {
+        throw 'Invalid encoded data!';
+    }
+
+    let splitData = data.split(';base64,');
+
+    let fileExtension = splitData[0];
+    let encodedData = splitData[1];
+
+    if (!fileExtension || !encodedData) {
+        throw 'Invalid encoded data!';
+    }
+
+    encodedData = Buffer.from(encodedData, 'base64');
+    fileExtension = fileExtension.substring('data:image/'.length);
+
+    return {bytes: encodedData, fileType: fileExtension};
+}
+
 module.exports = {
     name: 'mcstats',
     aliases: ['serverstat', 'serverstats', 'stats', 'stat', 'mcserver', 'checkmc'],
@@ -44,7 +78,7 @@ module.exports = {
             const embed = new Discord.RichEmbed()
                 .setTitle('Totsu MC Server Status')
                 .setColor('RANDOM')
-                .setThumbnail(Main.getClient().user.displayAvatarURL)
+                // .setThumbnail(Main.getClient().user.displayAvatarURL)
                 .addField('Status', status)
                 .addField('Players', players);
 
@@ -53,6 +87,20 @@ module.exports = {
             }
             if (server) {
                 embed.addField('Misc', server);
+            }
+
+            if (favicon) {
+                const property = imageByter(favicon);
+
+                if (property) {
+                    const imageData = property['bytes'];
+                    const fileType = property['fileType'];
+
+                    // attaches the icon file to discord attachment
+                    const attachment = new Discord.Attachment(imageData, 'totsu-icon.' + fileType);
+                    // attaches and sets the thumbnail to the icon
+                    embed.attachFile(attachment).setThumbnail('attachment://totsu-icon.' + fileType);
+                }
             }
 
             message.channel.send(embed);
