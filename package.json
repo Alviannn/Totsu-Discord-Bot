@@ -1,0 +1,23 @@
+{
+  "name": "totsu-dbot",
+  "version": "1.0.0",
+  "description": "Discord bot for totsu MC Server",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "keywords": [
+    "totsu",
+    "minecraft server", 
+    "mc server"
+  ],
+  "author": "Alviann",
+  "license": "MIT",
+  "dependencies": {
+    "ascii-table": "0.0.9",
+    "discord.js": "^11.5.1",
+    "express": "^4.17.1",
+    "request": "^2.88.0",
+    "superagent": "^5.1.2"
+  }
+}
