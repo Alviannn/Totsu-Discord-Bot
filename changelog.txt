@@ -1,0 +1,7 @@
+* Added config functions from the index.js (to allow config modifying)
+
+* getPrefix function now supports the changing prefix feature
+
+* Added command to view the prefix info and is customizable
+
+* Added changelog command to view the recent changelogs that has happened to the bot
