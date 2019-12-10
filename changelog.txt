@@ -5,3 +5,7 @@
 * Added command to view the prefix info and is customizable
 
 * Added changelog command to view the recent changelogs that has happened to the bot
+
+* Changed the changelog embed color to pink (it looks good :3)
+
+12/10/2019 (UTC+7)

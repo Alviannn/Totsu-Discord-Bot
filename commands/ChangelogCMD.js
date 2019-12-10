@@ -23,7 +23,7 @@ module.exports = {
 
         const embed = new Discord.RichEmbed()
             .setTitle('Recent changelogs')
-            .setColor('RANDOM')
+            .setColor('#fb55fb')
             .setDescription('```\n' + contentFile + '\n```');
 
         message.channel.send(embed);
