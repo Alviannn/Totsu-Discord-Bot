@@ -182,6 +182,29 @@ module.exports = {
         fs.writeFileSync('./config.json', JSON.stringify(config, null, 4));
 
         return config;
+    },
+
+    /**
+     * sends a 'no permission' message to the specified channel
+     * 
+     * @param {Discord.Message} message the message instance
+     * @param {Boolean} tagExecutor     true, if you want to tag the executor
+     */
+    sendNoPerm(message, tagExecutor) {
+        const member = message.member;
+        const embed = new Discord.RichEmbed()
+            .setDescription('You don\'t have the permission to execute this feature/command!')
+            .setColor('#ff0000')
+            .setThumbnail('https://cdn1.iconfinder.com/data/icons/color-bold-style/21/08-512.png')
+            .setFooter('Executed by ' + member.user.username, member.user.displayAvatarURL);
+
+        message.channel.send(embed)
+            .then(msg => msg.delete(3000));
+            
+        if (tagExecutor) {
+            message.channel.send('@' + member.user.username)
+                .then(msg => msg.delete(3000));
+        }
     }
 };
 

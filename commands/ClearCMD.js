@@ -13,12 +13,7 @@ module.exports = {
      */
     async execute(message, args) {
         if (!message.member.hasPermission('MANAGE_MESSAGES')) {
-            return message.reply("You don't have the permission to do this!")
-                .then(function (msg) {
-                    if (msg.deletable) {
-                        msg.delete(3000);
-                    }
-                });
+            return Main.sendNoPerm(message);
         }
         if (args.length === 0) {
             return message.channel.send("Usage: " + Main.getPrefix() + this.name + " <size> - " + this.description);

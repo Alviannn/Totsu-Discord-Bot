@@ -12,6 +12,12 @@ module.exports = {
      * @param {String[]} args            the arguments 
      */
     async execute(message, args) {
+        // checks for the member's permissions
+        const member = message.member;
+        if (!member.hasPermission('MANAGE_MESSAGES') && !member.hasPermission('MANAGE_ROLES_OR_PERMISSIONS')) {
+            return Main.sendNoPerm(message);
+        }
+        
         if (args.length === 0) {
             // sends the usage message (very complete I see)
             return message.channel.send(
@@ -31,17 +37,6 @@ module.exports = {
                 + 'Example: ' + Main.getPrefix() + this.name +  ' hello everybody -mention -color=ff0000 -title=NewTitle -hidden'
                 + '```'
             );
-        }
-
-        // checks for the member's permissions
-        const member = message.member;
-        if (!member.hasPermission('MANAGE_MESSAGES') && !member.hasPermission('MANAGE_ROLES_OR_PERMISSIONS')) {
-            return message.reply("You don't have the permission to do this!")
-                .then(function (msg) {
-                    if (msg.deletable) {
-                        msg.delete(3000);
-                    }
-                });
         }
 
         // creates the discord embed

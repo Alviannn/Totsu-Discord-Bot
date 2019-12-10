@@ -18,8 +18,7 @@ module.exports = {
 
         const member = message.member;
         if (!member.hasPermission('MANAGE_GUILD') && !member.hasPermission('ADMINISTRATOR')) {
-            return message.channel.send("You don't have the permission to do this!")
-                .then(msg => msg.delete(3000));
+            return Main.sendNoPerm(message);
         }
 
         const client = Main.getClient();

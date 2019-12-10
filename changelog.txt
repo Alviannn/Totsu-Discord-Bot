@@ -8,4 +8,8 @@
 
 * Changed the changelog embed color to pink (it looks good :3)
 
+* Added sendNoPerm function to send a 'no permission' message to a channel
+
+* Fixed permission issue on alert command
+
 12/10/2019 (UTC+7)
