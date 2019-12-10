@@ -25,6 +25,7 @@ module.exports = {
                 + '\n * -color=<hex color>'
                 + '\n * -mention'
                 + '\n * -title=<new title>'
+                + '\n * -notitle'
                 + '\n * -hidden'
                 + '\n\n' 
                 + 'Example: ' + Main.getPrefix() + this.name +  ' hello everybody -mention -color=ff0000 -title=NewTitle -hidden'
@@ -44,9 +45,7 @@ module.exports = {
         }
 
         // creates the discord embed
-        const embed = new Discord.RichEmbed()
-            .setTitle('Alert')
-            .setColor('RANDOM');
+        const embed = new Discord.RichEmbed().setColor('RANDOM');
 
         // handles color parameter filtering (to customize the color)
         const colorFilter = Main.filterStartsWith(args, '-color=');
@@ -68,6 +67,11 @@ module.exports = {
         args = hiddenFilter['array'];
         const hasHidden = hiddenFilter['return'];
 
+        // handles the no title filtering (to removes the title)
+        const noTitleFilter = Main.filterStartsWith(args, '-notitle');
+        args = noTitleFilter['array'];
+        const hasNoTitle = noTitleFilter['return'];
+
         // TODO: Coming soon
         // ------------------
         // const noEmbedFilter = Main.filterStartsWith(args, '-noembed');
@@ -79,8 +83,13 @@ module.exports = {
             embed.setColor(newColor);
         }
         // sets the new title
-        if (newTitle) {
-            embed.setTitle(newTitle);
+        if (!hasNoTitle) {
+            if (newTitle) {
+                embed.setTitle(newTitle);
+            }
+            else {
+                embed.setTitle('Alert');
+            }
         }
         // applies the hidden filter
         if (!hasHidden) {

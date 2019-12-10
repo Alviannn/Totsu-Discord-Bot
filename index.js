@@ -82,6 +82,9 @@ module.exports = {
      * @returns {String} the bot prefix
      */
     getPrefix() {
+        if (config['prefix']) {
+            return config['prefix'];
+        }
         return config['default-prefix'];
     },
 
@@ -158,6 +161,27 @@ module.exports = {
         else {
             return false;
         }
+    },
+
+    /**
+     * @returns {config} the config
+     */
+    getConfig() {
+        return config;
+    },
+
+    /**
+     * saves and sets the new config as the main config
+     * 
+     * @param {config | Object} newConfig the new config
+     * @returns {config} the new config
+     */
+    saveConfig(newConfig) {
+        config = newConfig;
+
+        fs.writeFileSync('./config.json', JSON.stringify(config, null, 4));
+
+        return config;
     }
 };
 
