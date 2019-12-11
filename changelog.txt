@@ -8,4 +8,6 @@
 
 * Simplified config file reader
 
+* Removed debug message
+
 12/11/2019 (UTC+7)

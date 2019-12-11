@@ -223,5 +223,3 @@ ListenerHandler.loadListeners();
 setTimeout(() => {
     client.login(config['token-bot']);
 }, 100);
-
-console.log(module.exports.currentDate(7, true));
