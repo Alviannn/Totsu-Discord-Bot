@@ -10,4 +10,6 @@
 
 * Removed debug message
 
+* Removed unnecessary logic on Logger
+
 12/11/2019 (UTC+7)

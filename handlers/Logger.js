@@ -26,9 +26,6 @@ module.exports = {
         }
 
         path += Main.currentDate(7).replace('/', '-') + '.log';
-        if (!fileExists(path)) {
-            fs.writeFileSync(path, '', {encoding: 'utf8'});
-        }
 
         let logsContent = fs.readFileSync(path, {econding: 'utf8'});
         const toInsert = '[' + Main.currentDate(7, true) + '] ' + logsMessage;
