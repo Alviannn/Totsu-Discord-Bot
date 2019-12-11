@@ -16,4 +16,6 @@
 
 * Fixed alert logging
 
+* Added show icon command
+
 12/11/2019 (UTC+7)
