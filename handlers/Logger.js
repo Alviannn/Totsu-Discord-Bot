@@ -25,7 +25,10 @@ module.exports = {
             fs.mkdirSync(path);
         }
 
-        path += Main.currentDate(7).replace('/', '-') + '.log';
+        path += Main.currentDate(7).split('/').join('-') + '.log';
+        if (!fileExists(path)) {
+            fs.writeFileSync(path, '');
+        }
 
         let logsContent = fs.readFileSync(path, {econding: 'utf8'});
         const toInsert = '[' + Main.currentDate(7, true) + '] ' + logsMessage;

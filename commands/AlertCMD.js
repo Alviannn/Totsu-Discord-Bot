@@ -42,6 +42,7 @@ module.exports = {
 
         // creates the discord embed
         const embed = new Discord.RichEmbed().setColor('RANDOM');
+        const originalArgs = args;
 
         // handles color parameter filtering (to customize the color)
         const colorFilter = Main.filterStartsWith(args, '-color=');
@@ -105,6 +106,6 @@ module.exports = {
             setTimeout(() => message.channel.send('@here'), 100);
         }
 
-        Logger.logThis(message.member.user.username + ' -> alerted args=[' + args.join(', ') + ']');
+        Logger.logThis(message.member.user.username + ' -> alerted args=[' + originalArgs.join(', ') + ']');
     }
 }

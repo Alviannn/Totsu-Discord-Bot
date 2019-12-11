@@ -9,7 +9,8 @@ module.exports = {
         }
 
         const embed = new Discord.RichEmbed()
-            .setAuthor(member.user.username + ' has left the server!', member.user.displayAvatarURL);
+            .setAuthor(member.user.username + ' has left the server!', member.user.displayAvatarURL)
+            .setColor('#ff0000');
 
         const config = require('../config.json');
 

@@ -10,6 +10,10 @@
 
 * Removed debug message
 
-* Removed unnecessary logic on Logger
+* Fixed logger not creating file
+
+* Added coloring to join-left logger
+
+* Fixed alert logging
 
 12/11/2019 (UTC+7)
