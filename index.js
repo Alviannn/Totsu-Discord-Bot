@@ -50,23 +50,7 @@ if (!fs.existsSync('./config.json')) {
     throw new Error("Cannot find config file!");
 }
 
-try {
-    const content = fs.readFileSync('./config.json', {encoding: 'utf8'});
-
-    // checks if the content is empty
-    if (!content) {
-        throw new Error("Failed to read config file!");
-    }
-
-    config = JSON.parse(content);
-
-    // checks if the config is empty
-    if (!config) {
-        throw new Error("Config file may be corrupted!");
-    }
-} catch (error) {
-    throw error;
-}
+config = require('./config.json');
 
 // ------------------------------------------ //
 
@@ -82,10 +66,7 @@ module.exports = {
      * @returns {String} the bot prefix
      */
     getPrefix() {
-        if (config['prefix']) {
-            return config['prefix'];
-        }
-        return config['default-prefix'];
+        return config['prefix'] ? config['prefix'] : config['default-prefix'];
     },
 
     /**
@@ -205,6 +186,14 @@ module.exports = {
             message.channel.send('@' + member.user.username)
                 .then(msg => msg.delete(3000));
         }
+    },
+
+    /**
+     * @param {Number} hourDiff the hours of difference
+     * @returns {String} current UTC date in beautiful format
+     */
+    currentDate(hourDiff) {
+        const millisDiff = (hourDiff * 1000) * (60 * 60) * 24; 
     }
 };
 
@@ -219,4 +208,6 @@ const ListenerHandler = require('./handlers/ListenerHandler.js');
 ListenerHandler.loadListeners();
 
 // starts the bot completely
-client.login(config['token-bot']);
+setTimeout(() => {
+    client.login(config['token-bot']);
+}, 100);
