@@ -24,7 +24,7 @@ const listener = app.listen(process.env.PORT, function() {
 // ------------------------------------------------- //
 
 const fetch = require("superagent");
-const projectName = "totsudb";
+const projectName = "totsu-dbt";
 
 fetch.get("https://" + projectName + ".glitch.me/").set("user-agent", "official-pinger/1.0.0").then(x => x);
 
