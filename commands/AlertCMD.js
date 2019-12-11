@@ -1,5 +1,6 @@
 const Discord = require('discord.js');
 const Main = require('../index.js');
+const Logger = require('../handlers/Logger.js');
 
 module.exports = {
     name: 'alert',
@@ -103,5 +104,7 @@ module.exports = {
         if (hasMention) {
             setTimeout(() => message.channel.send('@here'), 100);
         }
+
+        Logger.logThis(message.member.user.username + ' -> alerted args=[' + args.join(', ') + ']');
     }
 }

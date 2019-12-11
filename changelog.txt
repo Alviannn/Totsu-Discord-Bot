@@ -1,15 +1,11 @@
-* Added config functions from the index.js (to allow config modifying)
+* Fixed bot not able to restart
 
-* getPrefix function now supports the changing prefix feature
+* Added logger (currently on alert command only)
 
-* Added command to view the prefix info and is customizable
+* Added join and quit listener
 
-* Added changelog command to view the recent changelogs that has happened to the bot
+* Added date formatter to index.js
 
-* Changed the changelog embed color to pink (it looks good :3)
+* Simplified config file reader
 
-* Added sendNoPerm function to send a 'no permission' message to a channel
-
-* Fixed permission issue on alert command
-
-12/10/2019 (UTC+7)
+12/11/2019 (UTC+7)

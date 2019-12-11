@@ -1,14 +1,41 @@
 const fs = require('fs');
 const Discord = require('discord.js');
+const Main = require('../index.js');
+
+/**
+ * checks if the file path exists
+ * 
+ * @param {String} path the path
+ * @returns {Boolean}   true if the file exists, otherwise false
+ */
+function fileExists(path) {
+    return fs.existsSync(path);
+}
 
 module.exports = {
     /**
+     * logs a message to file
      * 
-     * @param {String} logMessage               the log message
-     * @param {Discord.Message} message the message instance
-     * @param {Boolean} putToFile               true will put the log to a file
+     * @param {String} logsMessage the logs message
      */
-    log(logMessage, message, putToFile) {
+    async logThis(logsMessage) {
+
+        let path = './logger/';
+        if (!fileExists(path)) {
+            fs.mkdirSync(path);
+        }
+
+        path += Main.currentDate(7).replace('/', '-') + '.log';
+        if (!fileExists(path)) {
+            fs.writeFileSync(path, '', {encoding: 'utf8'});
+        }
+
+        let logsContent = fs.readFileSync(path, {econding: 'utf8'});
+        const toInsert = '[' + Main.currentDate(7, true) + '] ' + logsMessage;
+
+        logsContent += '\n' + toInsert;
+        fs.writeFileSync(path, logsContent, {encoding: 'utf8'});
         
+        console.log(toInsert);
     }
 }

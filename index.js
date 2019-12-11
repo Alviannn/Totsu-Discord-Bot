@@ -189,11 +189,23 @@ module.exports = {
     },
 
     /**
-     * @param {Number} hourDiff the hours of difference
-     * @returns {String} current UTC date in beautiful format
+     * @param {Number} hourDiff         the hours of difference
+     * @param {Boolean} provideSpecific true, if you want a more specific time (hours, minutes, and seconds)
+     * @returns {String}                current UTC date in beautiful format
      */
-    currentDate(hourDiff) {
-        const millisDiff = (hourDiff * 1000) * (60 * 60) * 24; 
+    currentDate(hourDiff, provideSpecific) {
+        const millisDiff = hourDiff * (60 * 60) * 1000;
+        const millis = new Date().getTime() + millisDiff;
+
+        const date = new Date();
+        date.setTime(millis);
+
+        let formatted = date.getFullYear() + '/' + (date.getMonth() + 1) + '/' + date.getDate();
+        if (provideSpecific) {
+            formatted += ' - ' + date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds();
+        }
+
+        return formatted;
     }
 };
 
@@ -211,3 +223,5 @@ ListenerHandler.loadListeners();
 setTimeout(() => {
     client.login(config['token-bot']);
 }, 100);
+
+console.log(module.exports.currentDate(7, true));
