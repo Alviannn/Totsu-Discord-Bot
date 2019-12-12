@@ -14,4 +14,6 @@
 
 * Modified report command footer
 
+* Simplified changing discord presence logic
+
 12/12/2019 (UTC+7)

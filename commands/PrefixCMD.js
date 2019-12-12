@@ -20,21 +20,13 @@ module.exports = {
         if (!member.hasPermission('MANAGE_GUILD') && !member.hasPermission('ADMINISTRATOR')) {
             return Main.sendNoPerm(message);
         }
-
-        const client = Main.getClient();
+        
         const config = Main.getConfig();
 
         config['prefix'] = args[0];
 
         Main.saveConfig(config);
-
-        client.user.setPresence({
-            status: 'online',
-            game: {
-                type: 'WATCHING',
-                name: 'Type ' + Main.getPrefix() + 'help'
-            }
-        });
+        Main.setSimplePresence('online', 'PLAYING', 'Type ' + Main.getPrefix() + 'help');
 
         message.channel.send('The bot prefix has been changed to `' + Main.getPrefix() + '`!');
     }

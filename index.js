@@ -295,6 +295,32 @@ module.exports = {
                 .pipe(fs.createWriteStream('./images/' + name))
                 .on('close', callback)
         });
+    },
+
+    /**
+     * sets the discord presence
+     * 
+     * @param {Discord.PresenceData} data the presence data
+     */
+    setPresence(data) {
+        client.user.setPresence(data);
+    },
+
+    /**
+     * sets the discord presence simply
+     * 
+     * @param {Discord.PresenceStatus} status   the presence status
+     * @param {Discord.ActivityType} type       the status type
+     * @param {String} message                  the status message
+     */
+    setSimplePresence(status, type, message) {
+        this.setPresence({
+            status: status,
+            game: {
+                type: type,
+                name: message
+            }
+        });
     }
 };
 
