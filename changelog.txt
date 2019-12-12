@@ -1,21 +1,9 @@
-* Fixed bot not able to restart
+* Did a little fixing to show icon command
 
-* Added logger (currently on alert command only)
+* Added report command (only works with images, gifs, and videos)
 
-* Added join and quit listener
+* Added useful functions to index.js 
 
-* Added date formatter to index.js
+* Added report channel id to config
 
-* Simplified config file reader
-
-* Removed debug message
-
-* Fixed logger not creating file
-
-* Added coloring to join-left logger
-
-* Fixed alert logging
-
-* Added show icon command
-
-12/11/2019 (UTC+7)
+12/12/2019 (UTC+7)

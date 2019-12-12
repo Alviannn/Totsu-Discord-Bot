@@ -41,6 +41,7 @@ setInterval(() => {
 const Discord = require('discord.js');
 const client = new Discord.Client();
 const fs = require('fs');
+const request = require('request');
 
 let config = {};
 let commandMap = new Map();
@@ -206,6 +207,94 @@ module.exports = {
         }
 
         return formatted;
+    },
+
+    /**
+     * fetches a user from a message
+     * <p>
+     * based on nickname and it's real username
+     * 
+     * @param {String} name                     the name
+     * @param {Discord.Guild} guild             the discord guild (server)
+     * @returns {Discord.GuildMember | null}    the fetched user
+     */
+    fetchMember(name, guild) {
+
+        // fetches a user based on real username
+        for (const member of guild.members.values()) {
+            if (member.user.username === name) {
+                return member.user;
+            }
+        }
+
+        // fetches a user based on nickname / display name
+        for (const member of guild.members.values()) {
+            // based on nickname
+            if (member.nickname === name) {
+                return member.user;
+            }
+            // based on display name
+            else if (member.displayName === name) {
+                return member.user;
+            }
+        }
+
+        return null;
+    },
+
+    /**
+     * finds a channe;
+     * 
+     * @param {String} channelId    the channel id
+     * @param {Discord.Guild} guild the discord guild instance
+     * @returns {Discord.Channel}   the discord channel
+     */
+    findChannel(channelId, guild) {
+        const channels = guild.channels.values();
+
+        for (const channel of channels) {
+            if (channel.id === channelId) {
+                return channel;
+            }
+        }
+
+        return null;
+    },
+
+    /**
+     * checks if the channel is a text channel (textable channel)
+     * 
+     * @param {Discord.Channel} channel the discord channel instance
+     * @returns {Boolean}               true if the channel is textable
+     */
+    isTextableChannel(channel) {
+        const textChannel = channel instanceof Discord.TextChannel;
+        const dmChannel = channel instanceof Discord.DMChannel;
+        const groupDMChannel = channel instanceof Discord.GroupDMChannel;
+
+        return textChannel || dmChannel || groupDMChannel;
+    },
+
+    /**
+     * downloads an image from url
+     * 
+     * @param {String} url          the url
+     * @param {String} name         the file name
+     * @param {function} callback   the callback function
+     */
+    downloadImage(url, name, callback) {
+        // do a header request
+        request.head(url, function (err, res, body) {
+            // checks if any error occurrs
+            if (err) {
+                return err;
+            }
+
+            // downloads the file to a specific path
+            request(url)
+                .pipe(fs.createWriteStream('./images/' + name))
+                .on('close', callback)
+        });
     }
 };
 

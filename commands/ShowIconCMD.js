@@ -1,37 +1,5 @@
 const Discord = require('discord.js');
-
-/**
- * fetches a user from a message
- * <p>
- * based on nickname and it's real username
- * 
- * @param {String} name         the name
- * @param {Discord.Guild} guild the discord guild (server)
- * @returns {Discord.User | null}      the fetched user
- */
-function fetchUser(name, guild) {
-
-    // fetches a user based on real username
-    for (const member of guild.members.values()) {
-        if (member.user.username === name) {
-            return member.user;
-        }
-    }
-
-    // fetches a user based on nickname / display name
-    for (const member of guild.members.values()) {
-        // based on nickname
-        if (member.nickname === name) {
-            return member.user;
-        }
-        // based on display name
-        else if (member.displayName === name) {
-            return member.user;
-        }
-    }
-
-    return null;
-}
+const Main = require('../index.js');
 
 module.exports = {
     name: 'showicon',
@@ -70,10 +38,12 @@ module.exports = {
             return message.channel.send(embed);
         }
 
-        const fetchedUser = fetchUser(args[0], message.guild);
+        let fetchedUser = Main.fetchMember(args[0], message.guild);
         if (!fetchedUser) {
             return message.channel.send('Cannot find `' + args[0] + '`!');
         }
+
+        fetchedUser = fetchedUser.user;
 
         embed
             .setImage(fetchedUser.displayAvatarURL)

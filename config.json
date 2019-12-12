@@ -2,5 +2,6 @@
     "token-bot": "NjUyODI2Mzk4ODQyNTUyMzMw.XfB2Qw.8R0OQUNNWiTlc0tXuMbhlq5SgW0",
     "default-prefix": "ts!",
     "prefix": "-",
-    "join-left-channel": "654204375878860811"
+    "join-left-channel": "654204375878860811",
+    "report-channel": "654246871837179905"
 }
