@@ -6,4 +6,12 @@
 
 * Added report channel id to config
 
+* Removed 'no title' and 'mention' filter from alert command
+
+* Alert command defaults now has mentions and no title
+
+* Added debug filter to alert command
+
+* Modified report command footer
+
 12/12/2019 (UTC+7)

@@ -88,7 +88,7 @@ module.exports = {
                 .setColor('#ff0000')
                 .attachFile(attachment)
                 .setImage('attachment://' + file.filename)
-                .setFooter('Executed by ' + user.username, user.displayAvatarURL);
+                .setFooter('Reported by ' + user.username, user.displayAvatarURL);
     
             setTimeout(() => {
                 // deletes the message

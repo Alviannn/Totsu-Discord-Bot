@@ -29,13 +29,13 @@ module.exports = {
                 + 'You can use some unique parameters to add more things to the embeded message.' 
                 + '\n\n' 
                 + 'The parameters are:'
-                + '\n * -color=<hex color>'
-                + '\n * -mention'
-                + '\n * -title=<new title>'
-                + '\n * -notitle'
-                + '\n * -hidden'
+                + '\n * -color=<hex color> (to customize color)'
+                + '\n * -nomention (to remove the mention tag)'
+                + '\n * -title=<new title> (to add and set a title)'
+                + '\n * -hidden (to hide the command executor)'
+                + '\n * -debug (to not delete the executed command)'
                 + '\n\n' 
-                + 'Example: ' + Main.getPrefix() + this.name +  ' hello everybody -mention -color=ff0000 -title=NewTitle -hidden'
+                + 'Example: ' + Main.getPrefix() + this.name +  ' hello everybody -nomention -color=ff0000 -title=NewTitle -hidden'
                 + '```'
             );
         }
@@ -50,9 +50,9 @@ module.exports = {
         const newColor = colorFilter['return'];
 
         // handles mention parameter filtering (to allow mentioning using '@here')
-        const mentionFilter = Main.filterStartsWith(args, '-mention');
-        args = mentionFilter['array'];
-        const hasMention = mentionFilter['return'];
+        const noMentionFilter = Main.filterStartsWith(args, '-nomention');
+        args = noMentionFilter['array'];
+        const hasNoMention = noMentionFilter['return'];
 
         // handles title parameter filtering (to customize the title)
         const titleFilter = Main.filterStartsWith(args, '-title=');
@@ -64,45 +64,38 @@ module.exports = {
         args = hiddenFilter['array'];
         const hasHidden = hiddenFilter['return'];
 
-        // handles the no title filtering (to removes the title)
-        const noTitleFilter = Main.filterStartsWith(args, '-notitle');
-        args = noTitleFilter['array'];
-        const hasNoTitle = noTitleFilter['return'];
-
-        // TODO: Coming soon
-        // ------------------
-        // const noEmbedFilter = Main.filterStartsWith(args, '-noembed');
-        // args = noEmbedFilter['array'];
-        // const hasNoEmbed = noEmbedFilter['return'];
+        const debugFilter = Main.filterStartsWith(args, '-debug');
+        args = debugFilter['array'];
+        const hasDebug = debugFilter['return'];
 
         // sets the new color
         if (newColor) {
             embed.setColor(newColor);
         }
         // sets the new title
-        if (!hasNoTitle) {
-            if (newTitle) {
-                embed.setTitle(newTitle);
-            }
-            else {
-                embed.setTitle('Alert');
-            }
+        if (newTitle) {
+            embed.setTitle(newTitle);
         }
         // applies the hidden filter
         if (!hasHidden) {
             embed.setFooter('Executed by ' + member.user.username, member.user.displayAvatarURL);
         }
 
+        // joins the messages (was seperated) and sets it to the description
         embed.setDescription(args.join(' '));
-
+        // sends the embedded message
         message.channel.send(embed);
-        // deletes the original command message
-        if (message.deletable) {
-            message.delete(50);
-        }
 
-        // if mention parameter is true, then it'll send '@here' tag
-        if (hasMention) {
+        // deletes the original command message
+        setTimeout(() => {
+            if (message.deletable && !hasDebug) {
+                message.delete(10);
+            }
+        }, 100);
+
+        // checks if the no filter mention is true
+        // if it is then the '@here' tag won't be sent
+        if (!hasNoMention) {
             setTimeout(() => message.channel.send('@here'), 100);
         }
 
