@@ -16,8 +16,8 @@ module.exports = {
 
         if (args.length === 0) {
             embed
-                .setImage(message.client.user.displayAvatarURL)
-                .setDescription('This is my icon!');
+                .setImage(message.member.user.displayAvatarURL)
+                .setDescription('This is your avatar!');
 
             return message.channel.send(embed);
         }
@@ -33,7 +33,7 @@ module.exports = {
         if (mentionedUser) {
             embed
                 .setImage(mentionedUser.displayAvatarURL)
-                .setDescription('This is ' + mentionedUser.username + '\'s icon!');
+                .setDescription('This is ' + mentionedUser.username + '\'s avatar!');
 
             return message.channel.send(embed);
         }
@@ -47,7 +47,7 @@ module.exports = {
 
         embed
             .setImage(fetchedUser.displayAvatarURL)
-            .setDescription('This is ' + fetchedUser.username + '\'s icon!');
+            .setDescription('This is ' + fetchedUser.username + '\'s avatar!');
 
         message.channel.send(embed);
     }
