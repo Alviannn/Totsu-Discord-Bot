@@ -1,19 +1,13 @@
-* Did a little fixing to show icon command
+* Improved clear command (both logic and messages)
 
-* Added report command (only works with images, gifs, and videos)
+* Added mojang command
 
-* Added useful functions to index.js 
+* Changed several script name
 
-* Added report channel id to config
+* Added start time debug
 
-* Removed 'no title' and 'mention' filter from alert command
+* Added a function to format to a readable elapsed time (millis)
 
-* Alert command defaults now has mentions and no title
+* Added info command
 
-* Added debug filter to alert command
-
-* Modified report command footer
-
-* Simplified changing discord presence logic
-
-12/12/2019 (UTC+7)
+12/15/2019 (UTC+7)

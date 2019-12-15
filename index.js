@@ -1,3 +1,5 @@
+const startMillis = new Date().getTime();
+
 // server.js
 // where your node app starts
 
@@ -321,6 +323,77 @@ module.exports = {
                 name: message
             }
         });
+    },
+
+    /**
+     * formats the elapsed millis
+     * 
+     * @param {Number} millis   the millis
+     * @returns {String}        the formatted (elapsed) time
+     */
+    formatElapsed(millis) {
+        let seconds = parseInt((millis / 1000).toFixed());
+
+        // doing calculations
+        let months = 0;
+        while (seconds >= 2629800) {
+            months++;
+            seconds -= 2629800;
+        }
+
+        let weeks = 0;
+        while (seconds >= 604800) {
+            weeks++;
+            seconds -= 604800;
+        }
+
+        let days = 0;
+        while (seconds >= 86400) {
+            days++;
+            seconds -= 86400;
+        }
+
+        let hours = 0;
+        while (seconds >= 3600) {
+            hours++;
+            seconds -= 3600;
+        }
+
+        let minutes = 0;
+        while (seconds >= 60) {
+            minutes++;
+            seconds -= 60;
+        }
+
+        // starts the formatting
+        const builder = [];
+        if (months >= 1) {
+            builder.push(months + ' month' + (months > 1 ? 's' : ''));
+        }
+        if (weeks >= 1) {
+            builder.push(weeks + ' week' + (weeks > 1 ? 's' : ''));
+        }
+        if (days >= 1) {
+            builder.push(days + ' day' + (days > 1 ? 's' : ''));
+        }
+        if (hours >= 1) {
+            builder.push(hours + ' hour' + (hours > 1 ? 's' : ''));
+        }
+        if (minutes >= 1) {
+            builder.push(minutes + ' minute' + (minutes > 1 ? 's' : ''));
+        }
+        if (seconds >= 1) {
+            builder.push(seconds + ' second' + (seconds > 1 ? 's' : ''));
+        }
+
+        return builder.join(' ');
+    },
+
+    /**
+     * @returns {Number} the start time (in millis)
+     */
+    startTime() {
+        return startMillis;
     }
 };
 
