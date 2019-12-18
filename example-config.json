@@ -1,0 +1,7 @@
+{
+    "token-bot": "discord bot token",
+    "default-prefix": "ts!",
+    "prefix": "-",
+    "join-left-channel": "channel id (for join and left logs)",
+    "report-channel": "channel id (to store reports)"
+}

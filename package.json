@@ -14,10 +14,10 @@
   "author": "Alviann",
   "license": "MIT",
   "engines": {
-    "node": "8.x"
+    "node": "12.x"
   },
   "repository": {
-    "url": "https://glitch.com/edit/#!/totsudb"
+    "url": "https://glitch.com/edit/#!/totsu-dbt"
   },
   "dependencies": {
     "ascii-table": "0.0.9",
