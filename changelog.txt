@@ -8,4 +8,6 @@
 
 * Fixed 'findEmoji' function
 
+* Added server IP field to server status
+
 12/19/2019 (UTC+7)

@@ -82,6 +82,7 @@ module.exports = {
                 .setTitle('Totsu MC Server Status')
                 .setColor('RANDOM')
                 // .setThumbnail(Main.getClient().user.displayAvatarURL)
+                .addField('IP Address', ipAddress)
                 .addField('Status', status)
                 .addField('Players', players);
 
