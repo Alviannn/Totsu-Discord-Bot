@@ -26,4 +26,6 @@
 
 * Renamed 'ListenerHandler' to 'EventHandler'
 
+* Added eval command
+
 12/19/2019 (UTC+7)
