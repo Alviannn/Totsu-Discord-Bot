@@ -69,7 +69,10 @@ module.exports = {
                 return message.channel.send("An error has occurred! \n\n" + content['error']);
             }
 
-            const status = content['online'] ? 'Online :green_circle:' : 'Offline :red_circle:';
+            const onlineEmoji = Main.findEmoji(message.guild, 'online_stats', true);
+            const offlineEmoji = Main.findEmoji(message.guild, 'offline_stats', true);
+
+            const status = content['online'] ? 'Online ' + onlineEmoji : 'Offline ' + offlineEmoji; // 'Online :green_circle:' : 'Offline :red_circle:'
             const motd = content['motd'];
             const players = content['players']['now'] + '/' + content['players']['max'];
             const server = content['server']['name'];

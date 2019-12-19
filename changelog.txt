@@ -1,13 +1,9 @@
-* Improved clear command (both logic and messages)
+* Updated .gitignore
 
-* Added mojang command
+* Made the project open-source
 
-* Changed several script name
+* MC Server stats should be using the animated emojis
 
-* Added start time debug
+* The link to the source will be shown when you tagged the bot
 
-* Added a function to format to a readable elapsed time (millis)
-
-* Added info command
-
-12/15/2019 (UTC+7)
+12/19/2019 (UTC+7)

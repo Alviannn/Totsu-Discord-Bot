@@ -386,6 +386,23 @@ module.exports = {
      */
     startTime() {
         return startMillis;
+    },
+
+    /**
+     * finds an emoji
+     * 
+     * @param {Discord.Guild} guild the discord guild
+     * @param {String} name         the emoji name
+     * @param {Boolean} animated    true, if the emoji is animated
+     * @returns {Discord.Emoji}     the emoji
+     */
+    findEmoji(guild, name, animated) {
+        if (!(guild instanceof Discord.Guild)) {
+            return;
+        }
+
+        const emoji = guild.emojis.find(emoji => emoji.animated === animated && emoji.name === name);
+        return emoji;
     }
 };
 
