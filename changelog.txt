@@ -10,4 +10,6 @@
 
 * Added server IP field to server status
 
+* Cleaned info command and added source link to info command
+
 12/19/2019 (UTC+7)
