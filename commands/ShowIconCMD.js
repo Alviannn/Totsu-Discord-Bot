@@ -3,7 +3,7 @@ const Main = require('../index.js');
 
 module.exports = {
     name: 'showicon',
-    aliases: ['icon'],
+    aliases: ['icon', 'avatar', 'image'],
     description: 'Shows the icon of a user',
     /**
      * executes the command

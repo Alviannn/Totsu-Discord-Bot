@@ -12,4 +12,12 @@
 
 * Cleaned info command and added source link to info command
 
+* More aliases for show icon command
+
+* Allowed arguments for help command (ex: -help <command name>)
+
+* Tagging bot to show info is more strict than before
+
+* Added command object for identifier
+
 12/19/2019 (UTC+7)

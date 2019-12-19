@@ -37,6 +37,8 @@ const client = new Discord.Client();
 const fs = require('fs');
 const request = require('request');
 
+const Command = require('./objects/Command.js');
+
 let config = {};
 let commandMap = new Map();
 
@@ -77,14 +79,14 @@ module.exports = {
     /**
      * inserts the command list
      * 
-     * @param {Map} commands the command list
+     * @param {Map<String, Command>} commands the command list
      */
     insertCommandMap(commands) {
         commandMap = commands;
     },
 
     /**
-     * @returns {Map} the command list
+     * @returns {Map<String, Command>} the command list
      */
     getCommandMap() {
         return commandMap;

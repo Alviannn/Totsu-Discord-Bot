@@ -11,7 +11,7 @@ module.exports = {
         const client = Main.getClient();
 
         // sends the prefix info when the bot is mentioned!
-        if (message.isMentioned(client.user)) {
+        if (message.isMentioned(client.user) && message.content === '<@!' + client.user.id + '>') {
             const embed = new Discord.RichEmbed()
                 .setTitle('Information')
                 .setColor('RANDOM')
