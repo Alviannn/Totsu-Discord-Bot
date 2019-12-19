@@ -18,13 +18,18 @@ module.exports = {
         const embed = new Discord.RichEmbed()
             .setTitle('Bot Information')
             .setColor('#00ffff')
+
             .setDescription(
-                'This bot is created specifically for Totsu Server (Minecraft)'
+                'This bot is created specifically for TotSu Minecraft Server'
             )
+
             .addField('Bot prefix', 'The bot prefix is `' + Main.getPrefix() + '`')
             .addField('Online time', Main.formatElapsed(new Date().getTime() - Main.startTime()))
             .addField('Bot author', 'Alvian#1341')
             .addField('Help command', 'The help command is `' + Main.getPrefix() + 'help`')
+            .addField('Source code', 'This bot is open-source, you can view it [here](https://github.com/Alviannn/Totsu-Discord-Bot/)')
+            // .addField('Specifications', os.cpus()[0].model + ' (' + os.cpus().length + ')')
+
             .setThumbnail(client.user.displayAvatarURL);
 
         message.channel.send(embed);
