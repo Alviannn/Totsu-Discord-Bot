@@ -24,6 +24,7 @@ module.exports = {
     name: 'report',
     aliases: ['lapor', 'complain'],
     description: 'Do a report',
+    category: 'Moderation',
     /**
      * executes the command
      * 

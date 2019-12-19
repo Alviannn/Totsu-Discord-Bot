@@ -20,4 +20,10 @@
 
 * Added command object for identifier
 
+* Modified 'listeners' folder to 'events'
+
+* Added 'category' to commands
+
+* Renamed 'ListenerHandler' to 'EventHandler'
+
 12/19/2019 (UTC+7)

@@ -419,8 +419,8 @@ CommandHandler.loadCommands();
 
 console.log('');
 
-const ListenerHandler = require('./handlers/ListenerHandler.js');
-ListenerHandler.loadListeners();
+const EventHandler = require('./handlers/EventHandler.js');
+EventHandler.loadEvents();
 
 // starts the bot completely
 setTimeout(() => {

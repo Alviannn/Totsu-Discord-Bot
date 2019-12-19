@@ -30,6 +30,7 @@ module.exports = {
     name: 'mojang',
     aliases: ['mojangstats'],
     description: 'Checks for the mojang server status',
+    category: 'Information',
     /**
      * executes the command
      * 

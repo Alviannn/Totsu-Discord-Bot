@@ -6,6 +6,7 @@ module.exports = {
     name: 'info',
     aliases: ['information', 'know', 'news', 'bot', 'discord'],
     description: 'Shows the bot information',
+    category: 'Information',
     /**
      * executes the command
      * 

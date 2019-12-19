@@ -5,6 +5,7 @@ module.exports = {
     name: 'showicon',
     aliases: ['icon', 'avatar', 'image'],
     description: 'Shows the icon of a user',
+    category: 'Fun',
     /**
      * executes the command
      * 

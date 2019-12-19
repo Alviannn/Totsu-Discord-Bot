@@ -40,6 +40,7 @@ module.exports = {
     name: 'mcstats',
     aliases: ['serverstat', 'serverstats', 'stats', 'stat', 'mcserver', 'checkmc'],
     description: 'Sends the specified message to through the bot',
+    category: 'Information',
     /**
      * executes the command
      * 

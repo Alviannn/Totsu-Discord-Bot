@@ -5,6 +5,7 @@ module.exports = {
     name: 'changelog',
     aliases: ['viewchanges', 'updates', 'changes'],
     description: 'Sends the changelog that has been committed recently',
+    category: 'Information',
     /**
      * executes the command
      * 

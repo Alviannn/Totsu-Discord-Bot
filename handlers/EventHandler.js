@@ -5,19 +5,19 @@ const fs = require('fs');
 /**
  * handles loading the listeners
  */
-function handleLoadListeners() {
+function handleLoadEvents() {
     // checks if the 'listeners' folder exists
-    if (!fs.existsSync('./listeners')) {
-        fs.mkdirSync('./listeners/');
+    if (!fs.existsSync('./events/')) {
+        fs.mkdirSync('./events/');
     }
 
     const client = Main.getClient();
-    const files = fs.readdirSync('./listeners/').filter(file => file.endsWith('.js'));
+    const files = fs.readdirSync('./events/').filter(file => file.endsWith('.js'));
 
     const table = new ascii().setHeading('Listener File', 'Event-ID', 'Status');
 
     for (const file of files) {       
-        const listener = require('../listeners/' + file);
+        const listener = require('../events/' + file);
         
         // checks if the event id isn't empty
         if (listener.eventId && !listener.disabled) {
@@ -41,7 +41,7 @@ function handleLoadListeners() {
 }
 
 module.exports = {
-    async loadListeners() {
-        handleLoadListeners();
+    async loadEvents() {
+        handleLoadEvents();
     }
 }

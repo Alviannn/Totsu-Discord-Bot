@@ -5,6 +5,7 @@ module.exports = {
     name: 'prefix',
     aliases: ['serverprefix', 'botprefix', 'pref'],
     description: 'Sends the prefix info (and maybe change it if you have the access?)',
+    category: 'Information / Moderation',
     /**
      * executes the command
      * 
