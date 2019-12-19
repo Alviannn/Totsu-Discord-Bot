@@ -19,7 +19,7 @@ module.exports = {
                     + "I'm pretty sure that you want to know my prefix command right? :3 \n\n"
                     + "Alright, my prefix command is `" + Main.getPrefix() + "`! \n\n" 
                     + "If you want to know my command list just type `" + Main.getPrefix() + "help" + "`!\n"
-                    + "Source code: [here](https://github.com/Alviannn/Totsu-Discord-Bot/) <:github_icon_filled:657074235272986624>")
+                    + "Source code: [here](https://github.com/Alviannn/Totsu-Discord-Bot/) " + Main.findEmoji(message.guild, 'github_icon_filled'));
 
             return message.channel.send(embed);
         }
