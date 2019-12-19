@@ -6,4 +6,6 @@
 
 * The link to the source will be shown when you tagged the bot
 
+* Fixed 'findEmoji' function
+
 12/19/2019 (UTC+7)

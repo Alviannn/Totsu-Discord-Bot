@@ -401,6 +401,10 @@ module.exports = {
             return;
         }
 
+        if (!animated) {
+            animated = false;
+        }
+
         const emoji = guild.emojis.find(emoji => emoji.animated === animated && emoji.name === name);
         return emoji;
     }
