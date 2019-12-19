@@ -28,4 +28,6 @@
 
 * Added eval command
 
+* Cleaned help command
+
 12/19/2019 (UTC+7)

@@ -68,20 +68,21 @@ module.exports = {
         }
         else {
             const embed = new Discord.RichEmbed()
-                .setTitle('Command List')
+                .setAuthor('Command List')
                 .setColor('RANDOM')
                 .setThumbnail(client.user.displayAvatarURL)
                 .setFooter('Executed by ' + member.user.username, member.user.displayAvatarURL);
 
             const commandList = [];
-            let count = 1;
+            // let count = 1;
 
             for (const command of commandMap.values()) {
-                commandList.push('**[' + count + ']** ' + Main.getPrefix() + command.name + ' - _' + command.description + '_');
-                count++;
+                // commandList.push('**[' + count + ']** ' + Main.getPrefix() + command.name + ' - _' + command.description + '_');
+                // count++;
+                commandList.push('`' + command.name + '`');
             }
 
-            embed.setDescription(commandList.join('\n\n'));
+            embed.setDescription(commandList.join(', ') + '\n\n Prefix: `' + Main.getPrefix() + '`');
             message.channel.send(embed);
         }
 
