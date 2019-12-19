@@ -31,6 +31,8 @@ module.exports = {
             message.delete(50);
         }
 
+        let didItPass = false;
+
         try {
             let resultOutput = eval(codeInput);
 
@@ -44,14 +46,20 @@ module.exports = {
                 .setThumbnail(image)
                 .setColor('RANDOM')
                 .addField(':inbox_tray: Code Input', '```js\n' + codeInput + '```')
-                .addField(':outbox_tray: Code Output', '```js\n' + resultOutput + '```');
+                .addField(':outbox_tray: Code Output', '```js\n' + resultOutput + '```')
+                .setFooter('Executed by ' + member.user.username, member.user.displayAvatarURL);
     
             message.channel.send(embed);
+            didItPass = true;
         } catch (error) {
             if (!error) {
                 return message.channel.send('An error has occurred!');
             }
             return message.channel.send('An error has occurred! \n```js\n' + error + '```');
+        }
+
+        if (didItPass && message.deletable) {
+            message.delete(50);
         }
         
     }
