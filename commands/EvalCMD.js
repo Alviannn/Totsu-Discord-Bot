@@ -59,7 +59,7 @@ module.exports = {
         }
 
         if (didItPass && message.deletable) {
-            message.delete(50);
+            message.delete(100);
         }
         
     }
