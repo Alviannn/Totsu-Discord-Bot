@@ -2,4 +2,6 @@
 
 * Changed ascii-table to table (dependency)
 
+* Eval command now deletes the executed string after 100ms
+
 12/20/2019 (UTC+7)
