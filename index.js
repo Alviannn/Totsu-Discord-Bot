@@ -412,12 +412,10 @@ module.exports = {
     }
 };
 
-// ------------------------------------------ //
+// ---------------- Handler ---------------- //
 
 const CommandHandler = require('./handlers/CommandHandler.js');
 CommandHandler.loadCommands();
-
-console.log('');
 
 const EventHandler = require('./handlers/EventHandler.js');
 EventHandler.loadEvents();

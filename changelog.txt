@@ -1,33 +1,5 @@
-* Updated .gitignore
+* Added new dependencies (better-sqlite3 and quick.db-plus for later use)
 
-* Made the project open-source
+* Changed ascii-table to table (dependency)
 
-* MC Server stats should be using the animated emojis
-
-* The link to the source will be shown when you tagged the bot
-
-* Fixed 'findEmoji' function
-
-* Added server IP field to server status
-
-* Cleaned info command and added source link to info command
-
-* More aliases for show icon command
-
-* Allowed arguments for help command (ex: -help <command name>)
-
-* Tagging bot to show info is more strict than before
-
-* Added command object for identifier
-
-* Modified 'listeners' folder to 'events'
-
-* Added 'category' to commands
-
-* Renamed 'ListenerHandler' to 'EventHandler'
-
-* Added eval command
-
-* Cleaned help command
-
-12/19/2019 (UTC+7)
+12/20/2019 (UTC+7)
