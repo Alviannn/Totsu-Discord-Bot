@@ -60,12 +60,12 @@ module.exports = {
         }
 
         // checks for mentions
-        const mention = args[0].match(/<@!*[0-9]{18}>/g);
-
+        let mention = args[0].match(/<@!*[0-9]{18}>/g);
         let target;
 
         if (mention && mention.length > 0) {
-            target = Main.fetchMember(mention[0], message.guild);
+            mention = mention[0].match(/[0-9]{18}/g)[0];
+            target = Main.fetchMember(mention, message.guild);
         }
 
         // checks for the member/user existence
