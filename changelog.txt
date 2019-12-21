@@ -12,4 +12,6 @@
 
 * Added duration objects (this is actually a utility)
 
+* Command handler now supports one more folder registration
+
 12/21/2019 (UTC+7)

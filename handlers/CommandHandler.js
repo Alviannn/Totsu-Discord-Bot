@@ -1,5 +1,4 @@
 const fs = require('fs');
-// const ascii = require('ascii-table');
 const table = require('table');
 const Main = require('../index.js');
 
@@ -15,32 +14,50 @@ module.exports = {
 
         const tableArr = [];
         const commandMap = new Map();
-        const files = fs.readdirSync('./commands/').filter(file => file.endsWith('.js'));
+        const files = fs.readdirSync('./commands/');
 
+        // table initialization
         tableArr.push(['Command File', 'Name', 'Aliases', 'Status']);
-        // const table = new ascii().setHeading('Command File', 'Name', 'Aliases', 'Status');
 
         for (const file of files) {
+            // check if the file is a directory
+            if (fs.lstatSync('./commands/' + file).isDirectory()) {
+                const dir = './commands/' + file;
+
+                const subFiles = fs.readdirSync(dir);
+                // iterates through the sub files
+                for (const subFile of subFiles) {
+                    if (!subFile.endsWith('.js')) {
+                        continue;
+                    }
+
+                    const command = require('.' + dir + '/' + subFile);
+                    if (command.name && command.aliases && !command.disabled) {
+                        commandMap.set(command.name, command);
+                        tableArr.push([file + '/' + subFile, command.name, command.aliases.join(', '), 'V']);
+                    }
+                    else {
+                        tableArr.push([file + '/' + subFile, command.name, command.aliases.join(', '), 'X']);
+                    }
+                }
+            } 
+            if (!file.endsWith('.js')) {
+                continue;
+            }
             const command = require('../commands/' + file);
 
             if (command.name && command.aliases && !command.disabled) {
                 commandMap.set(command.name, command);
-                // table.addRow(file, command.name, command.aliases.join(', '), '✅');
                 tableArr.push([file, command.name, command.aliases.join(', '), 'V']);
             }
             else {
                 tableArr.push([file, command.name, command.aliases.join(', '), 'X']);
-                // table.addRow(file, command.name, command.aliases.join(', '), '❌');
             }
         }
 
         if (tableArr.length === 1) {
             tableArr.push(['', '', '', '']);
         }
-
-        // if (table.getRows().length === 0) {
-        //     table.addRow('', '', '', '');
-        // }
 
         const storeTable = table.table(tableArr, {border: table.getBorderCharacters('norc')});
 

@@ -1,9 +1,9 @@
 const Discord = require('discord.js');
-const Main = require('../index.js');
+const Main = require('../../index.js');
 const sql = require('better-sqlite3');
 const moment = require('moment');
 
-const durationUtil = require('../objects/Duration.js');
+const durationUtil = require('../../objects/Duration.js');
 
 module.exports = {
     name: 'mute',
