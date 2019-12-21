@@ -16,4 +16,14 @@
 
 * Fixed mute command not catching mentions as mute target (still incomplete)
 
+* Added and implemented mute role id for mute identification
+
+* Added findRole function
+
+* Fixed bad mute expire logic
+
+* Added auto-remove mute role (if the mute expires)
+
+* Now bots aren't mute-able
+
 12/21/2019 (UTC+7)

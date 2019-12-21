@@ -7,8 +7,8 @@ const durationUtil = require('../../objects/Duration.js');
 
 module.exports = {
     name: 'mute',
-    aliases: ['shut', 'tempmute', 'tmute'],
-    description: 'Mutes a user for a specific amount of time',
+    aliases: ['shut', 'tempmute', 'tmute', 'tempmute'],
+    description: 'Mutes a user',
     category: 'Moderation',
     /**
      * executes the command
@@ -59,6 +59,16 @@ module.exports = {
                 .then(() => channel.send(member.user.toString()));
         }
 
+        let muteRoleId = require('../../config.json')['mute-role-id'];
+        if (!muteRoleId) {
+            return channel.send('Cannot find any role for mute identification! \nPlease ask the developer to fix this issue!');
+        }
+
+        const muteRole = Main.findRole(muteRoleId, message.guild);
+        if (!muteRole) {
+            return channel.send('Failed to find a role by the id of `' + muteRoleId + '`! \nPlease ask the developer to fix this issue!');
+        }
+
         // checks for mentions
         let mention = args[0].match(/<@!*[0-9]{18}>/g);
         let target;
@@ -74,7 +84,10 @@ module.exports = {
         }
 
         if (!target) {
-            return message.channel.send('Cannot find this user/member!');
+            return channel.send('Cannot find this user/member!');
+        }
+        if (target.user.bot) {
+            return channel.send('Cannot mute a bot!');
         }
 
         let reason = Main.copyArrayRange(args, 1).join(' ').trim();
@@ -95,7 +108,7 @@ module.exports = {
         } catch (err) {
             // if the error exists then return the error
             if (err) {
-                return message.channel.send('An error has occurred! \n```js\n' + err + ' #1```');
+                return channel.send('An error has occurred! \n```js\n' + err + ' #1```');
             }
         }
 
@@ -127,9 +140,12 @@ module.exports = {
         } catch (err) {
             // if the error exists then return the error
             if (err) {
-                return message.channel.send('An error has occurred! \n```js\n' + err + ' #2```');
+                return channel.send('An error has occurred! \n```js\n' + err + ' #2```');
             }
         }
+
+        const roles = target.roles.set(muteRole.id, muteRole);
+        target.setRoles(roles);
 
         embed.setColor('RANDOM');
         if (permMute === true) {
@@ -139,7 +155,7 @@ module.exports = {
             embed.setDescription(target.user.username + ' has been temp-muted! \nDuration: ' + duration['rawDuration'] + '\nReason: ' + reason);
         }
 
-        message.channel.send(embed);
+        channel.send(embed);
     }
 
 }

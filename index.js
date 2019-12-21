@@ -254,11 +254,11 @@ module.exports = {
     },
 
     /**
-     * finds a channe;
+     * finds a channel by id
      * 
-     * @param {String} channelId    the channel id
-     * @param {Discord.Guild} guild the discord guild instance
-     * @returns {Discord.Channel}   the discord channel
+     * @param {String} channelId              the channel id
+     * @param {Discord.Guild} guild           the discord guild instance
+     * @returns {Discord.Channel | undefined} the discord channel
      */
     findChannel(channelId, guild) {
         const channels = guild.channels.values();
@@ -269,7 +269,27 @@ module.exports = {
             }
         }
 
-        return null;
+        return;
+    },
+
+
+    /**
+     * finds a role by id
+     * 
+     * @param {String} roleId               the role id
+     * @param {Discord.Guild} guild         the discord guild instance
+     * @returns {Discord.Role | undefined}  the discord role
+     */
+    findRole(roleId, guild) {
+        const roles = guild.roles.values();
+
+        for (const role of roles) {
+            if (role.id === roleId) {
+                return role;
+            }
+        }
+
+        return;
     },
 
     /**
@@ -507,12 +527,39 @@ function startMuteTask() {
         // iterates through all of the properties
         for (const res of results) {
             // if the mute result is permanent then continue
-            if (res['perm'] === true) {
+            if (res['perm'] === 'true') {
                 continue;
             }
 
             // if the mute result already expires then delete it from the database
-            if (res['end'] >= moment.now()) {
+            if (moment.now() >= res['end']) {
+                const id = res['id'];
+                const guild = client.guilds.first();
+
+                const member = module.exports.fetchMember(id, guild);
+                if (!member) {
+                    continue;
+                }
+
+                let muteRoleId = config['mute-role-id'];
+                if (!muteRoleId) {
+                    throw Error('Cannot find the mute role!');
+                }
+
+                const muteRole = module.exports.findRole(muteRoleId, guild);
+                if (!muteRole) {
+                    throw Error('Cannot find the mute role!');
+                }
+
+                if (!member.roles.has(muteRole.id)) {
+                    continue;
+                }
+
+                const roles = member.roles;
+                roles.delete(muteRole.id);
+
+                member.setRoles(roles);
+
                 mute_db.prepare('DELETE FROM mute WHERE id = ?;').run(res['id']);
             }
         }
