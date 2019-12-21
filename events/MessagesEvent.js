@@ -9,9 +9,11 @@ module.exports = {
         }
 
         const client = Main.getClient();
+        
+        let botTag = message.content.match(/[0-9]{18}/g);
 
         // sends the prefix info when the bot is mentioned!
-        if (message.isMentioned(client.user) && message.content === '<@!' + client.user.id + '>') {
+        if (message.isMentioned(client.user) && botTag && botTag.length > 0 && botTag[0]) {
             const embed = new Discord.RichEmbed()
                 .setTitle('Information')
                 .setColor('RANDOM')

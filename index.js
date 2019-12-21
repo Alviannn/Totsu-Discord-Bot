@@ -36,6 +36,8 @@ const Discord = require('discord.js');
 const client = new Discord.Client();
 const fs = require('fs');
 const request = require('request');
+const sql = require('better-sqlite3');
+const moment = require('moment');
 
 const Command = require('./objects/Command.js');
 
@@ -207,31 +209,44 @@ module.exports = {
 
     /**
      * fetches a user from a message
-     * <p>
-     * based on nickname and it's real username
      * 
-     * @param {String} name                     the name
+     * based on username, nickname, and id
+     * 
+     * @param {String} name                     the name or user id
      * @param {Discord.Guild} guild             the discord guild (server)
      * @returns {Discord.GuildMember | null}    the fetched user
      */
     fetchMember(name, guild) {
+        // the members list
+        const members = guild.members.values();
 
-        // fetches a user based on real username
-        for (const member of guild.members.values()) {
-            if (member.user.username === name) {
-                return member.user;
+        // searches based on user id
+        if (name.match(/[0-9]{18}/g)) {
+            for (const member of members) {
+                if (member.user.id !== name) {
+                    continue;
+                }
+
+                return member;
             }
         }
 
-        // fetches a user based on nickname / display name
-        for (const member of guild.members.values()) {
+        // searches based on username
+        for (const member of members) {
+            if (member.user.username === name) {
+                return member;
+            }
+        }
+
+        // searches based on nickname / display name
+        for (const member of members) {
             // based on nickname
             if (member.nickname === name) {
-                return member.user;
+                return member;
             }
             // based on display name
             else if (member.displayName === name) {
-                return member.user;
+                return member;
             }
         }
 
@@ -409,6 +424,35 @@ module.exports = {
 
         const emoji = guild.emojis.find(emoji => emoji.animated === animated && emoji.name === name);
         return emoji;
+    },
+
+    /**
+     * copies an array with a specific range
+     *
+     * @param {Array} array  the array
+     * @param {Number} start the starting index
+     * @param {Number} end   the ending index (optional)
+     * @returns {Array}      the copied array
+     */
+    copyArrayRange(array, start, end) {
+        // checks if the array is actually an array
+        if (!Array.isArray(array)) {
+            return;
+        }
+    
+        // initializes the copy array variable
+        const copyArray = [];
+
+        // loops the array
+        // the starting point is where the 'start' index is
+        // since the 'end' index is optional, the end point could be the total index
+        for (let i = start; i < (end ? end : array.length); i++) {
+            // adds the value to the 'copyArray' variable
+            copyArray.push(array[i]);
+        }
+    
+        // returns the copied array
+        return copyArray;
     }
 };
 
@@ -420,7 +464,66 @@ CommandHandler.loadCommands();
 const EventHandler = require('./handlers/EventHandler.js');
 EventHandler.loadEvents();
 
+/**
+ * initalizes the databases
+ */
+function init_db() {
+
+    if (!fs.existsSync('./databases/')) {
+        fs.mkdirSync('./databases/');
+    }
+
+    const mute_db = sql('./databases/mute.db');
+    mute_db.prepare("CREATE TABLE IF NOT EXISTS mute "
+        + "(id TINYTEXT NOT NULL, start BIGINT NOT NULL DEFAULT '0', " 
+        + "end BIGINT NOT NULL DEFAULT '0', perm BOOLEAN NOT NULL);")
+        .run();
+}
+
+/**
+ * starts the mute task
+ * 
+ * this task is very useful and has a big role for the mute feature
+ * 
+ * Why? Because if the mute ends for a specific user then it'll remove it from the mute database
+ */
+function startMuteTask() {
+    setInterval(async () => {
+        const mute_db = sql('./databases/mute.db', {fileMustExist: true});
+
+        // if the mute database doesn't exists then throw an error
+        if (!mute_db) {
+            throw Error('Cannot continue mute task since the mute database is missing!');
+        }
+
+        // const mutePropery = {
+        //     id: String,
+        //     start: BigInt,
+        //     end: BigInt,
+        //     perm: Boolean
+        // }
+
+        const results = mute_db.prepare('SELECT * FROM mute;').all();
+        // iterates through all of the properties
+        for (const res of results) {
+            // if the mute result is permanent then continue
+            if (res['perm'] === true) {
+                continue;
+            }
+
+            // if the mute result already expires then delete it from the database
+            if (res['end'] >= moment.now()) {
+                mute_db.prepare('DELETE FROM mute WHERE id = ?;').run(res['id']);
+            }
+        }
+    }, moment.duration(5, 'second').as('ms'));
+}
+
 // starts the bot completely
-setTimeout(() => {
+setTimeout(async () => {
     client.login(config['token-bot']);
+
+    init_db();
+
+    startMuteTask();
 }, 100);

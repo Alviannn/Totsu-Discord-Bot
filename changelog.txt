@@ -1,7 +1,15 @@
-* Added new dependencies (better-sqlite3 and quick.db-plus for later use)
+* Removed quick.db-plus dependency
 
-* Changed ascii-table to table (dependency)
+* Added and implemented better-sqlite3 and moment dependencies
 
-* Eval command now deletes the executed string after 100ms
+* Fixed fetchMember function and added copyArrayRange function (at index.js)
 
-12/20/2019 (UTC+7)
+* Added mute command (incomplete)
+
+* Added database initializer and mute tasks (for auto unmute)
+
+* Implemented regex usages
+
+* Added duration objects (this is actually a utility)
+
+12/21/2019 (UTC+7)

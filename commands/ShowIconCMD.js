@@ -45,7 +45,6 @@ module.exports = {
         }
 
         fetchedUser = fetchedUser.user;
-
         embed
             .setImage(fetchedUser.displayAvatarURL)
             .setDescription('This is ' + fetchedUser.username + '\'s avatar!');
