@@ -119,8 +119,8 @@ module.exports = {
             return channel.send(embed);
         }
 
-        const insertQuery = 'INSERT INTO mute (id, start, end, perm, reason) VALUES (?, ?, ?, ?, ?);';
-        const updateQuery = 'UPDATE mute SET start = ?, end = ?, perm = ?, reason = ? WHERE id = ?;';
+        const insertQuery = 'INSERT INTO mute (id, start, end, perm, reason, executor) VALUES (?, ?, ?, ?, ?, ?);';
+        const updateQuery = 'UPDATE mute SET start = ?, end = ?, perm = ?, reason = ?, executor = ? WHERE id = ?;';
 
         let startTime = moment.now();
         let endTime = 0;
@@ -137,11 +137,11 @@ module.exports = {
 
             // if the data doesn't exists then make a new one
             if (!exists) {
-                mute_db.prepare(insertQuery).run(target.user.id, startTime, endTime, permMute + '', reason);
+                mute_db.prepare(insertQuery).run(target.user.id, startTime, endTime, permMute + '', reason, member.user.username);
             }
             // if the data exists then update/overwrite the data
             else {
-                mute_db.prepare(updateQuery).run(startTime, endTime, permMute + '', reason, target.user.id);
+                mute_db.prepare(updateQuery).run(startTime, endTime, permMute + '', reason, member.user.username, target.user.id);
             }
         } catch (err) {
             // if the error exists then return the error
@@ -155,13 +155,13 @@ module.exports = {
 
         embed.setColor('RANDOM');
         if (permMute) {
-            embed.setDescription(target.user.username + ' has been muted permanently! \nReason: ' + reason);
+            embed.setDescription(target.user.username + ' has been muted permanently! \n**Reason**: ' + reason);
         }
         else {
             embed.setDescription(
                 target.user.username + ' has been temp-muted! ' 
-                    + '\nDuration: ' + duration['num'] + ' ' + duration['type'] + (duration['num'] > 1 ? 's' : 's')
-                    + '\nReason: ' + reason
+                    + '\n**Duration**: ' + duration['num'] + ' ' + duration['type'] + (duration['num'] > 1 ? 's' : 's')
+                    + '\n**Reason**: ' + reason
             );
         }
 

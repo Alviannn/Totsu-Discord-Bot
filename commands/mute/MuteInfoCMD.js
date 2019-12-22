@@ -1,11 +1,12 @@
 const Discord = require('discord.js');
 const Main = require('../../index.js');
 const sql = require('better-sqlite3');
+const moment = require('moment');
 
 module.exports = {
-    name: 'unmute',
+    name: 'muteinfo',
     aliases: [],
-    description: 'unmutes a user',
+    description: 'Shows the info for a specific user',
     category: 'Moderation',
     /**
      * executes the command
@@ -36,9 +37,8 @@ module.exports = {
         }
 
         // checks for the arguments
-        if (args.length < 2) {
-            return channel.send('Usage: ' + prefix + this.name + ' <user> <reason> ' 
-                + '\nEx: ' + prefix + this.name + ' @name I think you\'re good enough to be unmuted now');
+        if (args.length < 1) {
+            return channel.send('Usage: ' + prefix + this.name + ' <user>');
         }
 
         // checks for the db
@@ -69,59 +69,32 @@ module.exports = {
             return channel.send('Cannot find this user/member!');
         }
         if (target.user.bot) {
-            return channel.send('Cannot unmute a bot!');
+            return channel.send('A bot can never be muted or unmuted!');
         }
-
-        let muteRoleId = require('../../config.json')['mute-role-id'];
-        if (!muteRoleId) {
-            return channel.send('Cannot find any role for mute identification! \nPlease ask the developer to fix this issue!');
-        }
-
-        const muteRole = Main.findRole(muteRoleId, message.guild);
-        if (!muteRole) {
-            return channel.send('Failed to find a role by the id of `' + muteRoleId + '`! \nPlease ask the developer to fix this issue!');
-        }
-
-        let reason = Main.copyArrayRange(args, 1).join(' ').trim();
-        if (reason.length > 255) {
-            embed.setDescription('The max characters allowed for the mute \'reason\' is only 255 characters!')
-                .setColor('#ff0000');
-
-            return channel.send(embed);
-        }
-
-        const selectQuery = 'SELECT * FROM mute WHERE id = ?;';
-        const deleteQuery = 'DELETE FROM mute WHERE id = ?;';
 
         try {
-            // checks if the user exists in the database
-            const exists = mute_db.prepare(selectQuery).get(target.user.id);
-            if (!exists) {
-                embed.setColor('#ff0000')
-                    .setDescription(target.user.username + ' is not muted!');
+            const selectQuery = 'SELECT * FROM mute WHERE id = ?;';
+            const mutedData = mute_db.prepare(selectQuery).get(target.user.id);
 
-                return channel.send(embed);
+            if (!mutedData) {
+                return channel.send('There are no mute info for ' + target.user.username);
             }
 
-            // deletes the user from the database
-            mute_db.prepare(deleteQuery).run(target.user.id);
-        } catch (err) {
-            if (err) {
-                return channel.send('An error has occurred! \n```js\n' + err + '```');
+            embed.setColor('RANDOM')
+                .setDescription(
+                    '**Name**: ' + target.user.username + 
+                    '\n**Time left**: ' + (mutedData['perm'] === 'true' ? 'permanent' : Main.formatElapsed(mutedData['end'] - moment.now(), true)) +
+                    '\n**Reason**: ' + mutedData['reason'] +
+                    '\n**Executor**: ' + mutedData['executor']
+                );
+
+            return channel.send(embed);
+
+        } catch (error) {
+            if (error) {
+                return channel.send('An error has occurred! \n```js\n' + error + '```');
             }
         }
-
-        const roles = target.roles;
-        if (roles.has(muteRole.id)) {
-            roles.delete(muteRole.id);
-
-            target.setRoles(roles);
-        }
-
-        embed.setColor('RANDOM')
-            .setDescription(target.user.username + ' has been unmuted! \n**Reason**: ' + reason);
-
-        channel.send(embed);
     }
 
 }

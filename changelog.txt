@@ -26,4 +26,10 @@
 
 * Fixed mute command
 
+* Added executor column to mute db
+
+* Improved mojang command
+
+* Improved mute systems
+
 12/22/2019 (UTC+7)

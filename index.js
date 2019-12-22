@@ -515,7 +515,8 @@ function init_db() {
     const mute_db = sql('./databases/mute.db');
     mute_db.prepare("CREATE TABLE IF NOT EXISTS mute "
         + "(id TINYTEXT NOT NULL, start BIGINT NOT NULL DEFAULT '0', " 
-        + "end BIGINT NOT NULL DEFAULT '0', perm BOOLEAN NOT NULL, reason TINYTEXT NOT NULL);")
+        + "end BIGINT NOT NULL DEFAULT '0', perm BOOLEAN NOT NULL, " 
+        + "reason TINYTEXT NOT NULL, executor TINYTEXT NOT NULL);")
         .run();
 }
 

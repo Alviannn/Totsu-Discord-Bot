@@ -18,9 +18,12 @@ function convertUrl(url) {
 
 function convertStatus(status) {
     const valueId = {
-        green: 'No issues :green_circle:',
-        yellow: 'There are some issues :yellow_circle:',
-        red: 'Service is currently unavailable :red_circle:'
+        // green: 'No issues :green_circle:',
+        // yellow: 'There are some issues :yellow_circle:',
+        // red: 'Service is currently unavailable :red_circle:'
+        green: 'No issues <a:online_stats:657075573520334848>',
+        yellow: 'There are some issues <a:idle_stats:658298302001053696>',
+        red: 'Service is currently unavailable <a:offline_stats:657075572345667613>'
     }
 
     return valueId[status];
@@ -34,8 +37,8 @@ module.exports = {
     /**
      * executes the command
      * 
-     * @param {Discord.Message} message  the message instance
-     * @param {String[]} args            the arguments 
+     * @param {Discord.Message} message the message instance
+     * @param {String[]} args           the arguments 
      */
     async execute(message, args) {
         
@@ -54,19 +57,22 @@ module.exports = {
             }
             
             const embed = new Discord.RichEmbed()
-                .setTitle('Mojang Status')
+                .setAuthor('Mojang Status')
                 .setColor('RANDOM')
                 .setFooter('Executed by ' + message.author.username, message.author.displayAvatarURL)
                 .setThumbnail('https://vgboxart.com/resources/logo/3993_mojang-prev.png');
 
+            const services = [];
             for (const value of content) {
                 const keys = Object.keys(value);
 
                 for (const key of keys) {
-                    embed.addField('**' + convertUrl(key) + '**', convertStatus(value[key]));
+                    // embed.addField('**' + convertUrl(key) + '**', convertStatus(value[key]));
+                    services.push('**' + convertUrl(key) + '**: ' + convertStatus(value[key]));
                 }
             }
 
+            embed.setDescription(services.join('\n'));
             message.channel.send(embed);
         });
 
