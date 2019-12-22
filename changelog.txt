@@ -1,29 +1,9 @@
-* Removed quick.db-plus dependency
+* fetchMember -> findMember
 
-* Added and implemented better-sqlite3 and moment dependencies
+* Now if a mute expires it will notify the previously muted user
 
-* Fixed fetchMember function and added copyArrayRange function (at index.js)
+* Added support for DM commands execution
 
-* Added mute command (incomplete)
+* Code cleanups
 
-* Added database initializer and mute tasks (for auto unmute)
-
-* Implemented regex usages
-
-* Added duration objects (this is actually a utility)
-
-* Command handler now supports one more folder registration
-
-* Fixed mute command not catching mentions as mute target (still incomplete)
-
-* Added and implemented mute role id for mute identification
-
-* Added findRole function
-
-* Fixed bad mute expire logic
-
-* Added auto-remove mute role (if the mute expires)
-
-* Now bots aren't mute-able
-
-12/21/2019 (UTC+7)
+12/22/2019 (UTC+7)

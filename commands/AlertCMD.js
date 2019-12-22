@@ -79,7 +79,7 @@ module.exports = {
         }
         // applies the hidden filter
         if (!hasHidden) {
-            embed.setFooter('Executed by ' + member.user.username, member.user.displayAvatarURL);
+            embed.setFooter('Executed by ' + message.author.username, message.author.displayAvatarURL);
         }
 
         // joins the messages (was seperated) and sets it to the description
@@ -100,6 +100,6 @@ module.exports = {
             setTimeout(() => message.channel.send('@here'), 100);
         }
 
-        Logger.logThis(message.member.user.username + ' -> alerted args=[' + originalArgs.join(', ') + ']');
+        Logger.logThis(message.author.username + ' -> alerted args=[' + originalArgs.join(', ') + ']');
     }
 }

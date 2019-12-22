@@ -53,11 +53,10 @@ module.exports = {
                 return message.channel.send('Failed to parse the mojang status content!');
             }
             
-            const member = message.member;
             const embed = new Discord.RichEmbed()
                 .setTitle('Mojang Status')
                 .setColor('RANDOM')
-                .setFooter('Executed by ' + member.user.username, member.user.displayAvatarURL)
+                .setFooter('Executed by ' + message.author.username, message.author.displayAvatarURL)
                 .setThumbnail('https://vgboxart.com/resources/logo/3993_mojang-prev.png');
 
             for (const value of content) {

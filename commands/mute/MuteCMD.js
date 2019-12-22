@@ -30,10 +30,10 @@ module.exports = {
         const embed = new Discord.RichEmbed();
 
         // checks for the permission
-        if (!member.hasPermission('MUTE_MEMBERS') || member.user.id !== '217970261230747648') {
+        if (!member.hasPermission('MUTE_MEMBERS') || message.author.id !== '217970261230747648') {
             embed.setDescription("You don't have the permission to do this fam!")
                 .setColor(0xff0000)
-                .setFooter('Executed by ' + member.user.username, member.user.displayAvatarURL);
+                .setFooter('Executed by ' + message.author.username, message.author.displayAvatarURL);
 
             return channel.send(embed);
         }
@@ -56,7 +56,7 @@ module.exports = {
                 .setColor(0xff0000);
 
             return channel.send(embed)
-                .then(() => channel.send(member.user.toString()));
+                .then(() => channel.send(message.author.toString()));
         }
 
         let muteRoleId = require('../../config.json')['mute-role-id'];
@@ -75,12 +75,12 @@ module.exports = {
 
         if (mention && mention.length > 0) {
             mention = mention[0].match(/[0-9]{18}/g)[0];
-            target = Main.fetchMember(mention, message.guild);
+            target = Main.findMember(mention, message.guild);
         }
 
         // checks for the member/user existence
         if (!target) {
-            target = Main.fetchMember(args[0], message.guild);
+            target = Main.findMember(args[0], message.guild);
         }
 
         if (!target) {

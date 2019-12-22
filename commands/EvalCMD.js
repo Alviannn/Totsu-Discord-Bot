@@ -15,8 +15,8 @@ module.exports = {
      */
     async execute(message, args) {
 
-        const member = message.member;
-        if (member.user.id !== '217970261230747648') {
+        const user = message.author;
+        if (user.id !== '217970261230747648') {
             return message.channel.send("You're not allowed to execute this command since you're not whitelisted as a developer!");
         }
 
@@ -47,7 +47,7 @@ module.exports = {
                 .setColor('RANDOM')
                 .addField(':inbox_tray: Code Input', '```js\n' + codeInput + '```')
                 .addField(':outbox_tray: Code Output', '```js\n' + resultOutput + '```')
-                .setFooter('Executed by ' + member.user.username, member.user.displayAvatarURL);
+                .setFooter('Executed by ' + user.username, user.displayAvatarURL);
     
             message.channel.send(embed);
             didItPass = true;

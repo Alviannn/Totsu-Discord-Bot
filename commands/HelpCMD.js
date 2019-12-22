@@ -44,7 +44,6 @@ module.exports = {
         const commandMap = Main.getCommandMap();
 
         const client = message.client;
-        const member = message.member;
 
         if (args.length > 0) {
             const command = fetchCommand(args[0]);
@@ -62,7 +61,7 @@ module.exports = {
                     + '**Category:** `' + command.category + '`'
                 )
                 .setColor('RANDOM')
-                .setFooter('Executed by ' + member.user.username, member.user.displayAvatarURL);
+                .setFooter('Executed by ' + message.author.username, message.author.displayAvatarURL);
 
             message.channel.send(embed);
         }
@@ -71,7 +70,7 @@ module.exports = {
                 .setAuthor('Command List')
                 .setColor('RANDOM')
                 .setThumbnail(client.user.displayAvatarURL)
-                .setFooter('Executed by ' + member.user.username, member.user.displayAvatarURL);
+                .setFooter('Executed by ' + message.author.username, message.author.displayAvatarURL);
 
             const commandList = [];
             // let count = 1;

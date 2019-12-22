@@ -208,7 +208,7 @@ module.exports = {
     },
 
     /**
-     * fetches a user from a message
+     * searches for a user from a message
      * 
      * based on username, nickname, and id
      * 
@@ -216,7 +216,7 @@ module.exports = {
      * @param {Discord.Guild} guild             the discord guild (server)
      * @returns {Discord.GuildMember | null}    the fetched user
      */
-    fetchMember(name, guild) {
+    findMember(name, guild) {
         // the members list
         const members = guild.members.values();
 
@@ -536,7 +536,7 @@ function startMuteTask() {
                 const id = res['id'];
                 const guild = client.guilds.first();
 
-                const member = module.exports.fetchMember(id, guild);
+                const member = module.exports.findMember(id, guild);
                 if (!member) {
                     continue;
                 }
@@ -559,6 +559,12 @@ function startMuteTask() {
                 roles.delete(muteRole.id);
 
                 member.setRoles(roles);
+
+                const embed = new Discord.RichEmbed()
+                    .setDescription('Your mute has expired!')
+                    .setColor('RANDOM');
+
+                member.user.send(embed);
 
                 mute_db.prepare('DELETE FROM mute WHERE id = ?;').run(res['id']);
             }

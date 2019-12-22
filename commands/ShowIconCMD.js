@@ -17,7 +17,7 @@ module.exports = {
 
         if (args.length === 0) {
             embed
-                .setImage(message.member.user.displayAvatarURL)
+                .setImage(message.author.displayAvatarURL)
                 .setDescription('This is your avatar!');
 
             return message.channel.send(embed);
@@ -39,7 +39,7 @@ module.exports = {
             return message.channel.send(embed);
         }
 
-        let fetchedUser = Main.fetchMember(args[0], message.guild);
+        let fetchedUser = Main.findMember(args[0], message.guild);
         if (!fetchedUser) {
             return message.channel.send('Cannot find `' + args[0] + '`!');
         }

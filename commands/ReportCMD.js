@@ -75,7 +75,7 @@ module.exports = {
             // attachs it to the discord attachment
             const attachment = new Discord.Attachment(buffer, file.filename);
     
-            const user = message.member.user;
+            const user = message.author;
             const embed = new Discord.RichEmbed()
                 .setTitle('Report File')
                 .addField('Reason', args.join(' '))
