@@ -6,4 +6,10 @@
 
 * Code cleanups
 
+* Mute is no longer bypassable
+
+* Mute task interval will now run every 3 seconds
+
+* Reverted the 'expire notification update'
+
 12/22/2019 (UTC+7)

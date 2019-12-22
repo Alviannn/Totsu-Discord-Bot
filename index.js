@@ -523,34 +523,29 @@ function startMuteTask() {
         //     perm: Boolean
         // }
 
+        const guild = client.guilds.first();
+        let muteRoleId = config['mute-role-id'];
+        if (!muteRoleId) {
+            throw Error('Cannot find the mute role!');
+        }
+
+        const muteRole = module.exports.findRole(muteRoleId, guild);
+        if (!muteRole) {
+            throw Error('Cannot find the mute role!');
+        }
+
         const results = mute_db.prepare('SELECT * FROM mute;').all();
         // iterates through all of the properties
         for (const res of results) {
-            // if the mute result is permanent then continue
-            if (res['perm'] === 'true') {
+            const id = res['id'];
+
+            const member = module.exports.findMember(id, guild);
+            if (!member) {
                 continue;
             }
 
             // if the mute result already expires then delete it from the database
-            if (moment.now() >= res['end']) {
-                const id = res['id'];
-                const guild = client.guilds.first();
-
-                const member = module.exports.findMember(id, guild);
-                if (!member) {
-                    continue;
-                }
-
-                let muteRoleId = config['mute-role-id'];
-                if (!muteRoleId) {
-                    throw Error('Cannot find the mute role!');
-                }
-
-                const muteRole = module.exports.findRole(muteRoleId, guild);
-                if (!muteRole) {
-                    throw Error('Cannot find the mute role!');
-                }
-
+            if (moment.now() >= res['end'] && res['perm'] === 'false') {
                 if (!member.roles.has(muteRole.id)) {
                     continue;
                 }
@@ -560,16 +555,24 @@ function startMuteTask() {
 
                 member.setRoles(roles);
 
-                const embed = new Discord.RichEmbed()
-                    .setDescription('Your mute has expired!')
-                    .setColor('RANDOM');
+                // const embed = new Discord.RichEmbed()
+                //     .setDescription('Your mute has expired!')
+                //     .setColor('RANDOM');
 
-                member.user.send(embed);
+                // member.user.send(embed);
 
                 mute_db.prepare('DELETE FROM mute WHERE id = ?;').run(res['id']);
+                continue;
+            }
+
+            if (!member.roles.has(muteRole.id)) {
+                const roles = member.roles;
+                roles.set(muteRole.id, muteRole);
+
+                member.setRoles(roles);
             }
         }
-    }, moment.duration(5, 'second').as('ms'));
+    }, moment.duration(3, 'second').as('ms'));
 }
 
 // starts the bot completely
