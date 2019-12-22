@@ -32,7 +32,7 @@ module.exports = {
         // checks for the permission
         if (!member.hasPermission('MUTE_MEMBERS') || message.author.id !== '217970261230747648') {
             embed.setDescription("You don't have the permission to do this fam!")
-                .setColor(0xff0000)
+                .setColor('#ff0000')
                 .setFooter('Executed by ' + message.author.username, message.author.displayAvatarURL);
 
             return channel.send(embed);
@@ -53,12 +53,12 @@ module.exports = {
         if (!mute_db) {
             embed.setDescription('It seems that the mute database is nowhere to be found!\n' 
                 + 'This is actually a big problem so contact your developer regarding this!')
-                .setColor(0xff0000);
+                .setColor('#ff0000');
 
             return channel.send(embed)
                 .then(() => channel.send(message.author.toString()));
         }
-
+        
         let muteRoleId = require('../../config.json')['mute-role-id'];
         if (!muteRoleId) {
             return channel.send('Cannot find any role for mute identification! \nPlease ask the developer to fix this issue!');
@@ -112,30 +112,36 @@ module.exports = {
             }
         }
 
-        const insertQuery = 'INSERT INTO mute (id, start, end, perm) VALUES (?, ?, ?, ?);';
-        const updateQuery = 'UPDATE mute SET start = ?, end = ?, perm = ? WHERE id = ?;'
+        if (reason.length > 255) {
+            embed.setDescription('The max characters allowed for the mute \'reason\' is only 255 characters!')
+                .setColor('#ff0000');
+
+            return channel.send(embed);
+        }
+
+        const insertQuery = 'INSERT INTO mute (id, start, end, perm, reason) VALUES (?, ?, ?, ?, ?);';
+        const updateQuery = 'UPDATE mute SET start = ?, end = ?, perm = ?, reason = ? WHERE id = ?;';
 
         let startTime = moment.now();
         let endTime = 0;
 
         try {
-
             // to check for the data existence later
             const exists = mute_db.prepare("SELECT * FROM mute WHERE id = ?;")
                     .get(target.user.id);
             
             // inserts the end time value (only if the mute is permanent)
-            if (permMute === false) {
+            if (!permMute) {
                 endTime = moment.now() + (moment.duration(duration.num, duration.type).as('ms'));
             }
 
             // if the data doesn't exists then make a new one
             if (!exists) {
-                mute_db.prepare(insertQuery).run(target.user.id, startTime, endTime, permMute + '');
+                mute_db.prepare(insertQuery).run(target.user.id, startTime, endTime, permMute + '', reason);
             }
             // if the data exists then update/overwrite the data
             else {
-                mute_db.prepare(updateQuery).run(startTime, endTime, permMute + '', target.user.id);
+                mute_db.prepare(updateQuery).run(startTime, endTime, permMute + '', reason, target.user.id);
             }
         } catch (err) {
             // if the error exists then return the error
@@ -148,11 +154,15 @@ module.exports = {
         target.setRoles(roles);
 
         embed.setColor('RANDOM');
-        if (permMute === true) {
+        if (permMute) {
             embed.setDescription(target.user.username + ' has been muted permanently! \nReason: ' + reason);
         }
         else {
-            embed.setDescription(target.user.username + ' has been temp-muted! \nDuration: ' + duration['rawDuration'] + '\nReason: ' + reason);
+            embed.setDescription(
+                target.user.username + ' has been temp-muted! ' 
+                    + '\nDuration: ' + duration['num'] + ' ' + duration['type'] + (duration['num'] > 1 ? 's' : 's')
+                    + '\nReason: ' + reason
+            );
         }
 
         channel.send(embed);

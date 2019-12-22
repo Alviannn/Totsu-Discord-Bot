@@ -12,4 +12,18 @@
 
 * Reverted the 'expire notification update'
 
+* formatElapsed function now is more strict than before
+
+* Added year to formatElapsed function
+
+* Added more options such as 'noTrailing' and 'minimalist' to formatElapsed function
+
+* Added 'reason' column to mute database
+
+* Mute task now runs every 5 seconds
+
+* Added mutelist and unmute command
+
+* Fixed mute command
+
 12/22/2019 (UTC+7)

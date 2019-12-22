@@ -357,13 +357,25 @@ module.exports = {
     /**
      * formats the elapsed millis
      * 
-     * @param {Number} millis   the millis
-     * @returns {String}        the formatted (elapsed) time
+     * @param {Number} millis      the millis
+     * @param {Boolean} minimalist true, will do a minimalist format (from: 'days, hours' to 'd, h')
+     * @param {Boolean} noTrailing true, will remove any trailing numbers
+     * @returns {String}           the formatted (elapsed) time
      */
-    formatElapsed(millis) {
+    formatElapsed(millis, minimalist, noTrailing) {
+        if (typeof millis !== 'number' && typeof millis !== 'bigint') {
+            throw Error('The millis parameter must be number/bigint!');
+        }
+
         let seconds = parseInt((millis / 1000).toFixed());
 
         // doing calculations
+        let years = 0;
+        while (seconds >= 31557600) {
+            years++;
+            seconds -= 31557600;
+        }
+
         let months = 0;
         while (seconds >= 2629800) {
             months++;
@@ -396,23 +408,30 @@ module.exports = {
 
         // starts the formatting
         const builder = [];
+        if (years >= 1) {
+            builder.push(years + (minimalist ? 'y' : ' year' + (years > 1 ? 's' : '')));
+        }
         if (months >= 1) {
-            builder.push(months + ' month' + (months > 1 ? 's' : ''));
+            builder.push(months + (minimalist ? 'mo' : ' month' + (months > 1 ? 's' : '')));
         }
         if (weeks >= 1) {
-            builder.push(weeks + ' week' + (weeks > 1 ? 's' : ''));
+            builder.push(weeks + (minimalist ? 'w' : ' week' + (weeks > 1 ? 's' : '')));
         }
         if (days >= 1) {
-            builder.push(days + ' day' + (days > 1 ? 's' : ''));
+            builder.push(days + (minimalist ? 'd' : ' day' + (days > 1 ? 's' : '')));
         }
         if (hours >= 1) {
-            builder.push(hours + ' hour' + (hours > 1 ? 's' : ''));
+            builder.push(hours + (minimalist ? 'h' : ' hour' + (hours > 1 ? 's' : '')));
         }
         if (minutes >= 1) {
-            builder.push(minutes + ' minute' + (minutes > 1 ? 's' : ''));
+            builder.push(minutes + (minimalist ? 'm' : ' minute' + (minutes > 1 ? 's' : '')));
         }
         if (seconds >= 1) {
-            builder.push(seconds + ' second' + (seconds > 1 ? 's' : ''));
+            builder.push(seconds + (minimalist ? 's' : ' second' + (seconds > 1 ? 's' : '')));
+        }
+
+        if (noTrailing) {
+            return builder[0];
         }
 
         return builder.join(' ');
@@ -496,7 +515,7 @@ function init_db() {
     const mute_db = sql('./databases/mute.db');
     mute_db.prepare("CREATE TABLE IF NOT EXISTS mute "
         + "(id TINYTEXT NOT NULL, start BIGINT NOT NULL DEFAULT '0', " 
-        + "end BIGINT NOT NULL DEFAULT '0', perm BOOLEAN NOT NULL);")
+        + "end BIGINT NOT NULL DEFAULT '0', perm BOOLEAN NOT NULL, reason TINYTEXT NOT NULL);")
         .run();
 }
 
@@ -535,6 +554,10 @@ function startMuteTask() {
         }
 
         const results = mute_db.prepare('SELECT * FROM mute;').all();
+        if (results.length < 1) {
+            return;
+        }
+
         // iterates through all of the properties
         for (const res of results) {
             const id = res['id'];
@@ -572,7 +595,7 @@ function startMuteTask() {
                 member.setRoles(roles);
             }
         }
-    }, moment.duration(3, 'second').as('ms'));
+    }, moment.duration(5, 'second').as('ms'));
 }
 
 // starts the bot completely
