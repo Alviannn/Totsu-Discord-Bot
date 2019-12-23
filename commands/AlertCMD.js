@@ -6,6 +6,7 @@ module.exports = {
     name: 'alert',
     aliases: ['announce', 'broadcast', 'shout', 'announcement', 'say'],
     description: 'Sends the specified message to through the bot',
+    group: 'Admin',
     category: 'Moderation',
     /**
      * executes the command

@@ -9,6 +9,7 @@ module.exports = {
     name: 'mute',
     aliases: ['shut', 'tempmute', 'tmute', 'tempmute'],
     description: 'Mutes a user',
+    group: 'Mute',
     category: 'Moderation',
     /**
      * executes the command
@@ -137,11 +138,11 @@ module.exports = {
 
             // if the data doesn't exists then make a new one
             if (!exists) {
-                mute_db.prepare(insertQuery).run(target.user.id, startTime, endTime, permMute + '', reason, member.user.username);
+                mute_db.prepare(insertQuery).run(target.user.id, startTime, endTime, permMute + '', reason, member.user.tag);
             }
             // if the data exists then update/overwrite the data
             else {
-                mute_db.prepare(updateQuery).run(startTime, endTime, permMute + '', reason, member.user.username, target.user.id);
+                mute_db.prepare(updateQuery).run(startTime, endTime, permMute + '', reason, member.user.tag, target.user.id);
             }
         } catch (err) {
             // if the error exists then return the error

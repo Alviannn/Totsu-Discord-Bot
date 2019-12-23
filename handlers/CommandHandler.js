@@ -47,6 +47,10 @@ module.exports = {
             const command = require('../commands/' + file);
 
             if (command.name && command.aliases && !command.disabled) {
+                if (!command.group) {
+                    command.group = 'General';
+                }
+
                 commandMap.set(command.name, command);
                 tableArr.push([file, command.name, command.aliases.join(', '), 'V']);
             }

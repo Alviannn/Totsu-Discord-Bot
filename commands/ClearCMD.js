@@ -32,6 +32,7 @@ module.exports = {
     name: 'clear',
     aliases: [],
     description: 'Clears the messages with the specified number',
+    group: 'Admin',
     category: 'Moderation',
     /**
      * executes the command

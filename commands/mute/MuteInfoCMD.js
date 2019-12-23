@@ -7,6 +7,7 @@ module.exports = {
     name: 'muteinfo',
     aliases: [],
     description: 'Shows the info for a specific user',
+    group: 'Mute',
     category: 'Moderation',
     /**
      * executes the command

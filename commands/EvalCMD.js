@@ -6,6 +6,7 @@ module.exports = {
     name: 'eval',
     aliases: ['ev', 'evaluate', 'console'],
     description: 'Do an eval command (highly powerful)',
+    group: 'Developer',
     category: 'Developer',
     /**
      * executes the command

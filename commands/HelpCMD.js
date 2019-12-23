@@ -72,16 +72,44 @@ module.exports = {
                 .setThumbnail(client.user.displayAvatarURL)
                 .setFooter('Executed by ' + message.author.username, message.author.displayAvatarURL);
 
-            const commandList = [];
-            // let count = 1;
-
-            for (const command of commandMap.values()) {
-                // commandList.push('**[' + count + ']** ' + Main.getPrefix() + command.name + ' - _' + command.description + '_');
-                // count++;
-                commandList.push('`' + command.name + '`');
+            const commandList = {
+                general: [],
+                admin: [],
+                developer: [],
+                mute: []
             }
 
-            embed.setDescription(commandList.join(', ') + '\n\n Prefix: `' + Main.getPrefix() + '`');
+            for (const command of commandMap.values()) {
+                if (command.group === 'General') {
+                    commandList.general.push('`' + command.name + '`');
+                }
+                else if (command.group === 'Mute') {
+                    commandList.mute.push('`' + command.name + '`');
+                }
+                else if (command.group === 'Admin') {
+                    commandList.admin.push('`' + command.name + '`');
+                }
+                else if (command.group === 'Developer') {
+                    commandList.developer.push('`' + command.name + '`');
+                }
+            }
+
+            embed.setDescription(
+                '**General**:'
+                + '\n' + commandList.general.join(', ')
+                + '\n\n'
+                + '**Admin**:'
+                + '\n' + commandList.admin.join(', ')
+                + '\n\n'
+                + '**Developer**:'
+                + '\n' + commandList.developer.join(', ')
+                + '\n\n'
+                + '**Mute**:'
+                + '\n' + commandList.mute.join(', ')
+                + '\n\n '
+                + 'Prefix: `' + Main.getPrefix() + '`' 
+                + '\nSpecific command info: `' + Main.getPrefix() + this.name + ' <command>`'
+            );
             message.channel.send(embed);
         }
 

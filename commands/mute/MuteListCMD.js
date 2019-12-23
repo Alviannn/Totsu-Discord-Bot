@@ -7,6 +7,7 @@ module.exports = {
     name: 'mutelist',
     aliases: ['mutehist', 'mutehistory'],
     description: 'Shows the muted users list (or mute history)',
+    group: 'Mute',
     category: 'Moderation',
     /**
      * executes the command

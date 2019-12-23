@@ -1,35 +1,7 @@
-* fetchMember -> findMember
+* Added and implemented command grouping
 
-* Now if a mute expires it will notify the previously muted user
+* Improved help command
 
-* Added support for DM commands execution
+* Improved mute commands
 
-* Code cleanups
-
-* Mute is no longer bypassable
-
-* Mute task interval will now run every 3 seconds
-
-* Reverted the 'expire notification update'
-
-* formatElapsed function now is more strict than before
-
-* Added year to formatElapsed function
-
-* Added more options such as 'noTrailing' and 'minimalist' to formatElapsed function
-
-* Added 'reason' column to mute database
-
-* Mute task now runs every 5 seconds
-
-* Added mutelist and unmute command
-
-* Fixed mute command
-
-* Added executor column to mute db
-
-* Improved mojang command
-
-* Improved mute systems
-
-12/22/2019 (UTC+7)
+12/23/2019 (UTC+7)

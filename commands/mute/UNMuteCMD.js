@@ -6,6 +6,7 @@ module.exports = {
     name: 'unmute',
     aliases: [],
     description: 'unmutes a user',
+    group: 'Mute',
     category: 'Moderation',
     /**
      * executes the command
