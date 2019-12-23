@@ -20,4 +20,6 @@
 
 * Mute system (including commands) are complete
 
+* Removed 'Misc' field from mc server stats (requested by LamJeen)
+
 12/23/2019 (UTC+7)

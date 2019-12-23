@@ -90,9 +90,9 @@ module.exports = {
             if (motd) {
                 embed.addField('MOTD', motd);
             }
-            if (server) {
-                embed.addField('Misc', server);
-            }
+            // if (server) {
+            //     embed.addField('Misc', server);
+            // }
 
             if (favicon) {
                 const property = imageByter(favicon);
