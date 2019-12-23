@@ -1,5 +1,6 @@
 const Discord = require('discord.js');
 const Main = require('../../index.js');
+const moment = require('moment');
 const sql = require('better-sqlite3');
 
 module.exports = {
@@ -28,7 +29,7 @@ module.exports = {
         const embed = new Discord.RichEmbed();
 
         // checks for the permission
-        if (!member.hasPermission('MUTE_MEMBERS') || message.author.id !== '217970261230747648') {
+        if (!member.hasPermission('MUTE_MEMBERS')) {
             embed.setDescription("You don't have the permission to do this fam!")
                 .setColor('#ff0000')
                 .setFooter('Executed by ' + message.author.username, message.author.displayAvatarURL);
@@ -123,6 +124,21 @@ module.exports = {
             .setDescription(target.user.username + ' has been unmuted! \n**Reason**: ' + reason);
 
         channel.send(embed);
+
+        const logsEmbed = new Discord.RichEmbed()
+            .setAuthor('Un-Mute')
+            .setColor('#ffff00')
+            .setDescription(
+                '**Un-Muted user**: ' + target.user.tag
+                + '\n**Un-Muted by**: ' + member.user.tag
+                + '\n'
+                + '\n**Reason**: ' + reason
+                + '\n'
+                + '\n**Time**: ' + moment(moment.now() + moment.duration(7, 'h').as('ms')).format('YYYY/MM/DD - HH:mm:ss') + ' (UTC+7)'
+                + '\n**Channel**: ' + channel.name
+            );
+
+        Main.logMuteHistory(logsEmbed);
     }
 
 }

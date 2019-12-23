@@ -4,6 +4,7 @@
     "prefix": "-",
     "join-left-channel": "channel id (for join and left logs)",
     "report-channel": "channel id (to store reports)",
+    "mute-logs-channel": "channel id (to logs the recent mutes)",
     "mute-role-id": "role id (to identify muted users)",
     "glitch-link": "the link to your live glitch website"
 }

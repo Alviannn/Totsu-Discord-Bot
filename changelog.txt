@@ -12,4 +12,12 @@
 
 * Added member update event
 
+* Added and implemented mute logs channel
+
+* Added and implemented a function to log mute activities
+
+* Any mute activities now should be logged to the mute logs channel
+
+* Mute system (including commands) are complete
+
 12/23/2019 (UTC+7)

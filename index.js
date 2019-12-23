@@ -470,6 +470,27 @@ module.exports = {
     
         // returns the copied array
         return copyArray;
+    },
+
+    /**
+     * logs the mute command executions
+     * 
+     * @param {Discord.RichEmbed | Discord.Message} message the message or embed to be logged as history
+     */
+    logMuteHistory(message) {
+        let logsChannel;
+        try {
+            const channelId = config['mute-logs-channel'];
+            logsChannel =  module.exports.findChannel(channelId, client.guilds.first());
+
+            if (!logsChannel) {
+                throw Error();
+            }
+        } catch (error) {
+            throw Error('Cannot find the mute logs channel!');
+        }
+
+        logsChannel.send(message);
     }
 };
 
@@ -549,6 +570,16 @@ function startMuteTask() {
             else {
                 if (member.roles.has(muteRole.id)) {
                     member.removeRole(muteRole);
+
+                    const logsEmbed = new Discord.RichEmbed()
+                        .setAuthor('Expired')
+                        .setColor('#00ff00')
+                        .setDescription(
+                            '**User**: ' + member.user.tag
+                            + '\n**Time**: ' + moment(moment.now() + moment.duration(7, 'h').as('ms')).format('YYYY/MM/DD - HH:mm:ss') + ' (UTC+7)'
+                        );
+
+                    module.exports.logMuteHistory(logsEmbed);
                 }
             }
             
