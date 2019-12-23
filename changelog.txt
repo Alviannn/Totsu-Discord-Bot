@@ -6,4 +6,10 @@
 
 * Improved configs
 
+* Combined 'muteinfo' and 'mutelist' commands to mute command
+
+* Improved mute systems
+
+* Added member update event
+
 12/23/2019 (UTC+7)

@@ -217,40 +217,34 @@ module.exports = {
      * @returns {Discord.GuildMember | null}    the fetched user
      */
     findMember(name, guild) {
-        // the members list
-        const members = guild.members.values();
+        const members = guild.members;
+        let member;
 
         // searches based on user id
         if (name.match(/[0-9]{18}/g)) {
-            for (const member of members) {
-                if (member.user.id !== name) {
-                    continue;
-                }
-
+            member = members.find(member => member.id === name);
+            if (member) {
                 return member;
             }
         }
 
         // searches based on username
-        for (const member of members) {
-            if (member.user.username === name) {
-                return member;
-            }
+        member = members.find(member => member.user.username === name);
+        if (member) {
+            return member;
         }
 
-        // searches based on nickname / display name
-        for (const member of members) {
-            // based on nickname
-            if (member.nickname === name) {
-                return member;
-            }
-            // based on display name
-            else if (member.displayName === name) {
-                return member;
-            }
+        // searches based on nickname
+        member = members.find(member => member.nickname === name);
+        if (member) {
+            return member;
         }
 
-        return null;
+        //searches based on display name
+        member = members.find(member => member.displayName === name);
+        if (member) {
+            return member;
+        }
     },
 
     /**
@@ -261,15 +255,7 @@ module.exports = {
      * @returns {Discord.Channel | undefined} the discord channel
      */
     findChannel(channelId, guild) {
-        const channels = guild.channels.values();
-
-        for (const channel of channels) {
-            if (channel.id === channelId) {
-                return channel;
-            }
-        }
-
-        return;
+        return guild.channels.find(channel => channel.id === channelId);
     },
 
 
@@ -281,15 +267,7 @@ module.exports = {
      * @returns {Discord.Role | undefined}  the discord role
      */
     findRole(roleId, guild) {
-        const roles = guild.roles.values();
-
-        for (const role of roles) {
-            if (role.id === roleId) {
-                return role;
-            }
-        }
-
-        return;
+        return guild.roles.find(role => role.id === roleId);
     },
 
     /**
@@ -367,7 +345,7 @@ module.exports = {
             throw Error('The millis parameter must be number/bigint!');
         }
 
-        let seconds = parseInt((millis / 1000).toFixed());
+        let seconds = Math.floor(millis / 1000);
 
         // doing calculations
         let years = 0;
@@ -536,26 +514,21 @@ function startMuteTask() {
             throw Error('Cannot continue mute task since the mute database is missing!');
         }
 
-        // const mutePropery = {
-        //     id: String,
-        //     start: BigInt,
-        //     end: BigInt,
-        //     perm: Boolean
-        // }
-
         const guild = client.guilds.first();
-        let muteRoleId = config['mute-role-id'];
-        if (!muteRoleId) {
-            throw Error('Cannot find the mute role!');
-        }
+        let muteRole;
 
-        const muteRole = module.exports.findRole(muteRoleId, guild);
-        if (!muteRole) {
+        try {
+            let muteRoleId = config['mute-role-id'];
+            muteRole = module.exports.findRole(muteRoleId, guild);
+            if (!muteRole) {
+                throw Error('Cannot find the mute role!');
+            }
+        } catch (error) {
             throw Error('Cannot find the mute role!');
         }
 
         const results = mute_db.prepare('SELECT * FROM mute;').all();
-        if (results.length < 1) {
+        if (!results || results.length < 1) {
             return;
         }
 
@@ -568,35 +541,19 @@ function startMuteTask() {
                 continue;
             }
 
-            // if the mute result already expires then delete it from the database
-            if (moment.now() >= res['end'] && res['perm'] === 'false') {
+            if (res['end'] > moment.now() || res['perm'] === 'true') {
                 if (!member.roles.has(muteRole.id)) {
-                    continue;
+                    member.addRole(muteRole);
                 }
-
-                const roles = member.roles;
-                roles.delete(muteRole.id);
-
-                member.setRoles(roles);
-
-                // const embed = new Discord.RichEmbed()
-                //     .setDescription('Your mute has expired!')
-                //     .setColor('RANDOM');
-
-                // member.user.send(embed);
-
-                mute_db.prepare('DELETE FROM mute WHERE id = ?;').run(res['id']);
-                continue;
             }
-
-            if (!member.roles.has(muteRole.id)) {
-                const roles = member.roles;
-                roles.set(muteRole.id, muteRole);
-
-                member.setRoles(roles);
+            else {
+                if (member.roles.has(muteRole.id)) {
+                    member.removeRole(muteRole);
+                }
             }
+            
         }
-    }, moment.duration(5, 'second').as('ms'));
+    }, 20 * 1000);
 }
 
 // starts the bot completely
