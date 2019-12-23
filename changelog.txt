@@ -4,4 +4,6 @@
 
 * Improved mute commands
 
+* Improved configs
+
 12/23/2019 (UTC+7)

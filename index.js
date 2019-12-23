@@ -15,22 +15,7 @@ const listener = app.listen(process.env.PORT, function() {
   console.log("Your app is listening on port " + listener.address().port);
 });
 
-// ----------------------- Glitch Stuff ----------------------- //
-
-const fetch = require("superagent");
-const projectName = "totsu-dbt";
-
-fetch.get("https://" + projectName + ".glitch.me/").set("user-agent", "official-pinger/1.0.0").then(x => x);
-
-setInterval(() => {
-  fetch.get("https://" + projectName + ".glitch.me/").set("user-agent", "official-pinger/1.0.0").then(x => x);
-}, 180000); 
-
-setInterval(() => {
-  fetch.get("https://" + projectName + ".glitch.me/").set("user-agent", "official-pinger/1.0.0").then(x => x);
-}, 240000);
-
-// ------------------------------------------------- //
+// ---------------------------------------------- //
 
 const Discord = require('discord.js');
 const client = new Discord.Client();
@@ -51,7 +36,22 @@ if (!fs.existsSync('./config.json')) {
 
 config = require('./config.json');
 
-// ------------------------------------------ //
+// ----------------------- Glitch Stuff ----------------------- //
+
+const superagent = require("superagent");
+const glitchLink = config['glitch-link'];
+
+superagent.get(glitchLink).set("user-agent", "official-pinger/1.0.0").then(x => x);
+
+setInterval(() => {
+  superagent.get(glitchLink).set("user-agent", "official-pinger/1.0.0").then(x => x);
+}, 180000); 
+
+setInterval(() => {
+  superagent.get(glitchLink).set("user-agent", "official-pinger/1.0.0").then(x => x);
+}, 240000);
+
+// ------------------------------------------------- //
 
 module.exports = {
     /**
@@ -69,14 +69,14 @@ module.exports = {
     },
 
     /**
-	 * checks if value is a number
-	 * 
-	 * @param {String} value	the possible number value
-	 * @returns {Boolean} 		true if value is number, otherwise false
-	 */
-	isNumber(value) {
-		return !isNaN(parseFloat(value)) && isFinite(value);
-	},
+     * checks if value is a number
+     * 
+     * @param {String} value	the possible number value
+     * @returns {Boolean} 		true if value is number, otherwise false
+     */
+    isNumber(value) {
+        return !isNaN(parseFloat(value)) && isFinite(value);
+    },
 
     /**
      * inserts the command list
