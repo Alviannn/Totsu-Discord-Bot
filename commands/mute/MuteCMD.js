@@ -1,7 +1,7 @@
 const Discord = require('discord.js');
 const Main = require('../../index.js');
-const sql = require('better-sqlite3');
 const moment = require('moment');
+const MuteUtil = Main.muteUtil();
 
 const durationUtil = require('../../objects/Duration.js');
 
@@ -18,13 +18,6 @@ module.exports = {
      * @param {String[]} args            the arguments 
      */
     async execute(message, args) {
-        let mute_db;
-
-        try {
-            mute_db = sql('./databases/mute.db', {fileMustExist: true});
-        } catch (error) {
-        }
-
         const prefix = Main.getPrefix();
         const channel = message.channel;
         const member = message.member;
@@ -58,7 +51,9 @@ module.exports = {
         }
 
         // checks for the db
-        if (!mute_db) {
+        try {
+            MuteUtil.muteDB();
+        } catch (error) {
             embed.setDescription('It seems that the mute database is nowhere to be found!\n' 
                 + 'This is actually a big problem so contact your developer regarding this!')
                 .setColor('#ff0000');
@@ -76,12 +71,12 @@ module.exports = {
                 throw Error();
             }
         } catch (error) {
-            return channel.send('Cannot find a role by the id of `' + muteRoleId + '`! \nPlease ask the developer to fix this issue!');
+            return channel.send('Cannot find mute role! \nPlease ask the developer to fix this issue!');
         }
 
         if (args[0] === 'list')  {
-            const allMuted = mute_db.prepare('SELECT * FROM mute;').all();
-            if (allMuted && allMuted.length > 0) {
+            const allMuted = MuteUtil.cacheMap.values();
+            if (allMuted && MuteUtil.cacheMap.size > 0) {
                 const names = [];
                 const times = [];
                 const reasons = [];
@@ -93,7 +88,7 @@ module.exports = {
                     }
 
                     names.push(member.user.username);
-                    if (muted['perm'] === 'true') {
+                    if (muted['perm']) {
                         times.push('permanently');
                     }
                     else {
@@ -141,7 +136,6 @@ module.exports = {
             if (!target) {
                 target = Main.findMember(args[1], message.guild);
             }
-
             if (!target) {
                 return channel.send('Cannot find this user/member!');
             }
@@ -149,26 +143,18 @@ module.exports = {
                 return channel.send('Cannot mute a bot!');
             }
 
-            try {
-                const selectQuery = 'SELECT * FROM mute WHERE id = ?;';
-                const mutedData = mute_db.prepare(selectQuery).get(target.user.id);
-    
-                if (!mutedData) {
-                    return channel.send('There are no mute info for ' + target.user.username);
-                }
-    
-                embed.setColor('RANDOM')
-                    .setDescription(
-                        '**Name**: ' + target.user.username + 
-                        '\n**Time left**: ' + (mutedData['perm'] === 'true' ? 'permanent' : Main.formatElapsed(mutedData['end'] - moment.now(), true)) +
-                        '\n**Reason**: ' + mutedData['reason'] +
-                        '\n**Executor**: ' + mutedData['executor']
-                    );
-            } catch (error) {
-                if (error) {
-                    return channel.send('An error has occurred! \n```js\n' + error + '```');
-                }
+            if (!MuteUtil.has(target.user.id)) {
+                return channel.send('There are no mute info for ' + target.user.username);
             }
+
+            const mutedData = MuteUtil.cacheMap.get(target.user.id);
+            embed.setColor('RANDOM')
+                .setDescription(
+                    '**Name**: ' + target.user.username + 
+                    '\n**Time left**: ' + (mutedData['perm'] ? 'permanent' : Main.formatElapsed(mutedData['end'] - moment.now(), true)) +
+                    '\n**Reason**: ' + mutedData['reason'] +
+                    '\n**Executor**: ' + mutedData['executor']
+                );
 
             return channel.send(embed);
         }
@@ -223,30 +209,17 @@ module.exports = {
                 return channel.send(embed);
             }
 
-            const insertQuery = 'INSERT INTO mute (id, start, end, perm, reason, executor) VALUES (?, ?, ?, ?, ?, ?);';
-            const updateQuery = 'UPDATE mute SET start = ?, end = ?, perm = ?, reason = ?, executor = ? WHERE id = ?;';
-
             let startTime = moment.now();
             let endTime = 0;
 
             try {
-                // to check for the data existence later
-                const exists = mute_db.prepare("SELECT * FROM mute WHERE id = ?;")
-                        .get(target.user.id);
-                
                 // inserts the end time value (only if the mute is permanent)
                 if (!permMute) {
                     endTime = moment.now() + (moment.duration(duration.num, duration.type).as('ms'));
                 }
 
-                // if the data doesn't exists then make a new one
-                if (!exists) {
-                    mute_db.prepare(insertQuery).run(target.user.id, startTime, endTime, permMute + '', reason, member.user.tag);
-                }
-                // if the data exists then update/overwrite the data
-                else {
-                    mute_db.prepare(updateQuery).run(startTime, endTime, permMute + '', reason, member.user.tag, target.user.id);
-                }
+                // mutes the user
+                MuteUtil.set(target.user.id, startTime, endTime, permMute, reason, member.user.tag);
             } catch (err) {
                 // if the error exists then return the error
                 if (err) {

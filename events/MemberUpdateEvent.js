@@ -1,8 +1,8 @@
 const Discord = require('discord.js');
-const sql = require('better-sqlite3');
 const moment = require('moment');
 
 const Main = require('../index.js');
+const MuteUtil = Main.muteUtil();
 const config = require('../config.json');
 
 module.exports = {
@@ -12,12 +12,11 @@ module.exports = {
      * @param {Discord.GuildMember} newMember the new member
      */
     async call(oldMember, newMember) {
-
         if (oldMember.roles === newMember.roles) {
             return;
         }
 
-        const mute_db = sql('./databases/mute.db', {fileMustExist: true});
+        const mute_db = MuteUtil.muteDB();
         if (!mute_db) {
             throw Error('Cannot find mute database!');
         }
@@ -28,6 +27,7 @@ module.exports = {
         try {
             let muteRoleId = config['mute-role-id'];
             muteRole = Main.findRole(muteRoleId, guild);
+
             if (!muteRole) {
                 throw Error();
             }
@@ -35,12 +35,12 @@ module.exports = {
             throw Error('Cannot find the mute role!');
         }
 
-        const selectQuery = 'SELECT * FROM mute WHERE id = ?;';
-        const result = mute_db.prepare(selectQuery).get(newMember.user.id);
-        if (!result || !(muteRole instanceof Discord.Role)) {
+        if (!MuteUtil.has(newMember.user.id)) {
             return;
         }
-        if (moment.now() >= result['end'] && result['perm'] === 'false') {
+
+        const result = MuteUtil.cacheMap.get(newMember.user.id);
+        if (moment.now() >= result['end'] && !result['perm']) {
             return;
         }
 

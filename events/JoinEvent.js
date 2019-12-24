@@ -1,8 +1,8 @@
 const Discord = require('discord.js');
-const sql = require('better-sqlite3');
 const moment = require('moment');
 
 const Main = require('../index.js');
+const MuteUtil = Main.muteUtil();
 const config = require('../config.json');
 
 module.exports = {
@@ -35,11 +35,7 @@ module.exports = {
 
         // ----------- Mute System ----------- //
 
-        const mute_db = sql('./databases/mute.db', {fileMustExist: true});
-        if (!mute_db) {
-            throw Error('Cannot find mute database!');
-        }
-
+        const mute_db = MuteUtil.muteDB();
         const guild = member.guild;
         let muteRole;
 
@@ -54,11 +50,9 @@ module.exports = {
             throw Error('Cannot find the mute role!');
         }
 
-        const selectQuery = 'SELECT * FROM mute WHERE id = ?;';
-        const result = mute_db.prepare(selectQuery).get(member.user.id);
-
-        if (result) {
-            if (moment.now() >= result['end'] && result['perm'] === 'false') {
+        if (MuteUtil.has(member.user.id)) {
+            const result = MuteUtil.cacheMap.get(member.user.id);
+            if (moment.now() >= result['end'] && !result['perm']) {
                 return;
             }
             if (member.roles.has(muteRole.id)) {

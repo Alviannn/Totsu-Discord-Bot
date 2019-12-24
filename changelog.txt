@@ -1,25 +1,7 @@
-* Added and implemented command grouping
+* Added and implemented mute util
 
-* Improved help command
+* Implemented mute caching
 
-* Improved mute commands
+* Code cleanup
 
-* Improved configs
-
-* Combined 'muteinfo' and 'mutelist' commands to mute command
-
-* Improved mute systems
-
-* Added member update event
-
-* Added and implemented mute logs channel
-
-* Added and implemented a function to log mute activities
-
-* Any mute activities now should be logged to the mute logs channel
-
-* Mute system (including commands) are complete
-
-* Removed 'Misc' field from mc server stats (requested by LamJeen)
-
-12/23/2019 (UTC+7)
+12/24/2019 (UTC+7)

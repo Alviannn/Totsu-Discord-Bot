@@ -25,6 +25,7 @@ const sql = require('better-sqlite3');
 const moment = require('moment');
 
 const Command = require('./objects/Command.js');
+const MuteUtil = require('./objects/MuteUtil.js');
 
 let config = {};
 let commandMap = new Map();
@@ -491,22 +492,25 @@ module.exports = {
         }
 
         logsChannel.send(message);
+    },
+
+    /**
+     * @returns {MuteUtil} the mute util
+     */
+    muteUtil() {
+        return MuteUtil;
     }
 };
 
 // ---------------- Handler ---------------- //
 
 const CommandHandler = require('./handlers/CommandHandler.js');
-CommandHandler.loadCommands();
-
 const EventHandler = require('./handlers/EventHandler.js');
-EventHandler.loadEvents();
 
 /**
  * initalizes the databases
  */
 function init_db() {
-
     if (!fs.existsSync('./databases/')) {
         fs.mkdirSync('./databases/');
     }
@@ -520,78 +524,110 @@ function init_db() {
 }
 
 /**
- * starts the mute task
- * 
- * this task is very useful and has a big role for the mute feature
- * 
- * Why? Because if the mute ends for a specific user then it'll remove it from the mute database
+ * handles the mute expiration task
  */
-function startMuteTask() {
+function muteExpireTask() {
+    const guild = client.guilds.first();
+    let muteRole;
+
+    try {
+        let muteRoleId = config['mute-role-id'];
+        muteRole = module.exports.findRole(muteRoleId, guild);
+        if (!muteRole) {
+            throw Error();
+        }
+    } catch (error) {
+        throw Error('Cannot find the mute role!');
+    }
+
     setInterval(async () => {
-        const mute_db = sql('./databases/mute.db', {fileMustExist: true});
+        const mutes = MuteUtil.cacheMap.values();
 
-        // if the mute database doesn't exists then throw an error
-        if (!mute_db) {
-            throw Error('Cannot continue mute task since the mute database is missing!');
-        }
-
-        const guild = client.guilds.first();
-        let muteRole;
-
-        try {
-            let muteRoleId = config['mute-role-id'];
-            muteRole = module.exports.findRole(muteRoleId, guild);
-            if (!muteRole) {
-                throw Error('Cannot find the mute role!');
-            }
-        } catch (error) {
-            throw Error('Cannot find the mute role!');
-        }
-
-        const results = mute_db.prepare('SELECT * FROM mute;').all();
-        if (!results || results.length < 1) {
-            return;
-        }
-
-        // iterates through all of the properties
-        for (const res of results) {
-            const id = res['id'];
-
-            const member = module.exports.findMember(id, guild);
-            if (!member) {
+        for (const mute of mutes) {
+            if (!guild.members.has(mute['id'])) {
                 continue;
             }
 
-            if (res['end'] > moment.now() || res['perm'] === 'true') {
-                if (!member.roles.has(muteRole.id)) {
-                    member.addRole(muteRole);
-                }
-            }
-            else {
-                if (member.roles.has(muteRole.id)) {
-                    member.removeRole(muteRole);
+            const millis = moment.now();
 
-                    const logsEmbed = new Discord.RichEmbed()
-                        .setAuthor('Expired')
-                        .setColor('#00ff00')
-                        .setDescription(
-                            '**User**: ' + member.user.tag
-                            + '\n**Time**: ' + moment(moment.now() + moment.duration(7, 'h').as('ms')).format('YYYY/MM/DD - HH:mm:ss') + ' (UTC+7)'
-                        );
-
-                    module.exports.logMuteHistory(logsEmbed);
+            if (millis >= mute['end'] && !mute['perm']) {
+                const member = module.exports.findMember(mute['id'], guild);
+                if (!member) {
+                    continue;
                 }
+
+                MuteUtil.delete(mute['id']);
+                member.removeRole(muteRole);
+
+                const logsEmbed = new Discord.RichEmbed()
+                    .setAuthor('Expired')
+                    .setColor('#00ff00')
+                    .setDescription(
+                        '**User**: ' + member.user.tag
+                        + '\n**Time**: ' + moment(millis + moment.duration(7, 'h').as('ms')).format('YYYY/MM/DD - HH:mm:ss') + ' (UTC+7)'
+                    );
+
+                module.exports.logMuteHistory(logsEmbed);
             }
-            
         }
-    }, 20 * 1000);
+    }, 5 * 1000);
 }
+
+/**
+ * handles the anti-bypass mute task
+ */
+function muteAntiBypassTask() {
+    const guild = client.guilds.first();
+    let muteRole;
+
+    try {
+        let muteRoleId = config['mute-role-id'];
+        muteRole = module.exports.findRole(muteRoleId, guild);
+
+        if (!muteRole) {
+            throw Error();
+        }
+    } catch (error) {
+        throw Error('Cannot find the mute role!');
+    }
+
+    setInterval(() => {
+        const mutes = MuteUtil.cacheMap.values();
+
+        for (const mute of mutes) {
+            if (!guild.members.has(mute['id'])) {
+                continue;
+            }
+
+            const millis = moment.now();
+            if (millis < mute['end'] || mute['perm']) {
+                const member = module.exports.findMember(mute['id'], guild);
+                if (!member) {
+                    continue;
+                }
+
+                if (member.roles.has(muteRole.id)) {
+                    continue;
+                }
+
+                member.addRole(muteRole);
+            }
+        }
+    }, 30 * 1000);
+}
+
+client.login(config['token-bot']);
 
 // starts the bot completely
 setTimeout(async () => {
-    client.login(config['token-bot']);
-
     init_db();
+    MuteUtil.initCache();
 
-    startMuteTask();
-}, 100);
+    CommandHandler.loadCommands();
+    EventHandler.loadEvents();
+}, 50);
+
+setTimeout(async () => {
+    muteExpireTask();
+    muteAntiBypassTask();
+}, 1000);
