@@ -21,7 +21,7 @@ module.exports = {
             .setColor('#00ffff')
 
             .setDescription(
-                'This bot is created specifically for TotSu Minecraft Server'
+                'This bot is created specifically for Mythe Minecraft Server'
             )
 
             .addField('Bot prefix', 'The bot prefix is `' + Main.getPrefix() + '`')

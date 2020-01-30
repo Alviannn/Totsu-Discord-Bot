@@ -48,7 +48,7 @@ module.exports = {
      * @param {String[]} args            the arguments 
      */
     async execute(message, args) {
-        const ipAddress = 'totsu.mchost.id'
+        const ipAddress = 'mythe.mchost.id'
         const url = 'https://mcapi.us/server/status?ip=' + ipAddress;
 
         request(url, function (error, response, body) {
@@ -80,7 +80,7 @@ module.exports = {
             const favicon = content['favicon'];
 
             const embed = new Discord.RichEmbed()
-                .setTitle('Totsu MC Server Status')
+                .setTitle('Mythe MC Server Status')
                 .setColor('RANDOM')
                 // .setThumbnail(Main.getClient().user.displayAvatarURL)
                 .addField('IP Address', ipAddress)
@@ -102,9 +102,9 @@ module.exports = {
                     const fileType = property['fileType'];
 
                     // attaches the icon file to discord attachment
-                    const attachment = new Discord.Attachment(imageData, 'totsu-icon.' + fileType);
+                    const attachment = new Discord.Attachment(imageData, 'mythe-icon.' + fileType);
                     // attaches and sets the thumbnail to the icon
-                    embed.attachFile(attachment).setThumbnail('attachment://totsu-icon.' + fileType);
+                    embed.attachFile(attachment).setThumbnail('attachment://mythe-icon.' + fileType);
                 }
             }
 
