@@ -1,7 +1,11 @@
-* Added and implemented mute util
+Changelog:
 
-* Implemented mute caching
+* Updaed superagent depend
 
-* Code cleanup
+* Updated info command color and added an emoji
 
-12/24/2019 (UTC+7)
+* New server IP address and new animated emoji id
+
+* Fixed bot tagging, now it won't show the info when tagged with messages
+
+02/07/2020 (UTC+7)

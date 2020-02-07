@@ -48,7 +48,7 @@ module.exports = {
      * @param {String[]} args            the arguments 
      */
     async execute(message, args) {
-        const ipAddress = 'mythe.mchost.id'
+        const ipAddress = 'mythe.gq'
         const url = 'https://mcapi.us/server/status?ip=' + ipAddress;
 
         request(url, function (error, response, body) {
@@ -70,8 +70,8 @@ module.exports = {
                 return message.channel.send("An error has occurred! \n\n" + content['error']);
             }
 
-            const onlineEmoji = '<a:online_stats:657075573520334848>';
-            const offlineEmoji = '<a:offline_stats:657075572345667613>';
+            const onlineEmoji = '<a:online_stats:675270434673131520>';
+            const offlineEmoji = '<a:dnd_stats:675270433477623808>';
 
             const status = content['online'] ? 'Online ' + onlineEmoji : 'Offline ' + offlineEmoji; // 'Online :green_circle:' : 'Offline :red_circle:'
             const motd = content['motd'];

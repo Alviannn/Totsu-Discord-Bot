@@ -21,9 +21,9 @@ function convertStatus(status) {
         // green: 'No issues :green_circle:',
         // yellow: 'There are some issues :yellow_circle:',
         // red: 'Service is currently unavailable :red_circle:'
-        green: 'No issues <a:online_stats:657075573520334848>',
+        green: 'No issues <a:online_stats:675270434673131520>',
         yellow: 'There are some issues <a:idle_stats:658298302001053696>',
-        red: 'Service is currently unavailable <a:offline_stats:657075572345667613>'
+        red: 'Service is currently unavailable <a:dnd_stats:675270433477623808>'
     }
 
     return valueId[status];
