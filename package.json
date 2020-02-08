@@ -13,7 +13,7 @@
     "node": "12.x"
   },
   "repository": {
-    "url": "https://glitch.com/edit/#!/totsu-dbt"
+    "url": "https://glitch.com/edit/#!/mythe-dbt"
   },
   "dependencies": {
     "better-sqlite3": "^5.4.3",
